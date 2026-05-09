@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<title>Customer Journey · RuTube Influencer Platform</title>
+<style>
+:root {
+  --bg: #0A0A0A;
+  --surface: #141414;
+  --surface2: #1A1A1A;
+  --text: #F5F5F5;
+  --text-dim: #B0B0B0;
+  --text-muted: #707070;
+  --accent: #C8FF00;
+  --accent2: #00D9FF;
+  --amber: #FBBF24;
+  --border: #1F1F1F;
+  --border2: #2A2A2A;
+  --brand: #C8FF00;
+  --blogger: #00D9FF;
+  --team: #FBBF24;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+}
+.app { position: relative; width: 100vw; height: 100vh; display: flex; flex-direction: column; }
+
+.progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--border2); z-index: 10;
+}
+.progress-fill {
+  height: 100%; background: var(--accent);
+  transition: width 0.3s;
+}
+
+/* slides */
+.deck { position: relative; flex: 1; overflow: hidden; }
+.slide {
+  position: absolute; inset: 0;
+  padding: 64px 72px 150px;
+  display: flex; flex-direction: column;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.slide.active { opacity: 1; pointer-events: auto; }
+
+.page-num {
+  position: absolute; top: 24px; right: 32px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+h1 { font-size: 84px; font-weight: 900; letter-spacing: -0.04em; line-height: 0.88; margin: 0; }
+h2 { font-size: 40px; font-weight: 900; letter-spacing: -0.025em; line-height: 1; margin: 0; }
+
+/* cover & chapter */
+.cover, .chapter-cover { display: flex; flex-direction: column; gap: 32px; max-width: 1200px; margin: auto 0; }
+.cover h2, .chapter-cover h2 {
+  font-size: 22px; font-weight: 600; color: var(--text-dim);
+  letter-spacing: -0.005em; line-height: 1.4;
+}
+.badge {
+  display: inline-block; align-self: flex-start;
+  border: 1px solid var(--accent); color: var(--accent);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 7px 16px;
+}
+.chapter-num {
+  font-size: 11px; font-weight: 800;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent);
+}
+.ch-blogger .chapter-num { color: var(--blogger); }
+.ch-team .chapter-num { color: var(--team); }
+.ch-blogger.slide[data-kind="chapter"] h1 { color: var(--blogger); }
+.ch-team.slide[data-kind="chapter"] h1 { color: var(--team); }
+
+/* step layout */
+.step-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 64px; align-items: center;
+  margin: auto 0; flex: 1;
+}
+.step-text { display: flex; flex-direction: column; gap: 20px; }
+.step-meta {
+  display: flex; gap: 16px; align-items: center;
+  font-size: 11px; font-weight: 800;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+}
+.step-chapter { color: var(--accent); }
+.ch-blogger .step-chapter { color: var(--blogger); }
+.ch-team .step-chapter { color: var(--team); }
+.step-num { color: var(--text-muted); border-left: 1px solid var(--border2); padding-left: 16px; }
+.step-text h2 { font-size: 48px; }
+.step-body { font-size: 17px; color: var(--text-dim); line-height: 1.55; margin: 0; max-width: 540px; }
+
+.step-svg {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  padding: 32px; border-radius: 8px;
+  aspect-ratio: 5/3;
+  width: 100%;
+}
+.step-svg svg { width: 100%; height: 100%; max-width: 520px; }
+
+/* metrics glossary */
+.metrics-glossary {
+  position: absolute; left: 72px; right: 72px; bottom: 92px;
+  display: flex; gap: 18px; flex-wrap: wrap;
+  padding: 14px 0; border-top: 1px solid var(--border);
+  font-size: 11px; color: var(--text-muted); line-height: 1.4;
+}
+.metrics-glossary .m strong {
+  color: var(--accent); font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.04em; margin-right: 6px;
+}
+.ch-blogger .metrics-glossary .m strong { color: var(--blogger); }
+.ch-team .metrics-glossary .m strong { color: var(--team); }
+
+/* controls */
+.controls {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: 72px; background: rgba(10, 10, 10, 0.95);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  gap: 24px; z-index: 5;
+  backdrop-filter: blur(12px);
+}
+.btn {
+  background: transparent; border: 1px solid var(--border2);
+  color: var(--text); padding: 10px 18px;
+  font-family: inherit; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.15s;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.btn.primary:hover { background: var(--text); border-color: var(--text); }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+.chapter-tabs {
+  display: flex; gap: 0; border-left: 1px solid var(--border2); padding-left: 24px; margin-left: 8px;
+}
+.tab {
+  background: transparent; border: 1px solid var(--border2); border-right: none;
+  color: var(--text-muted); padding: 8px 14px;
+  font-family: inherit; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer;
+}
+.tab:last-child { border-right: 1px solid var(--border2); }
+.tab.brand.active { color: var(--brand); border-color: var(--brand); }
+.tab.blogger.active { color: var(--blogger); border-color: var(--blogger); }
+.tab.team.active { color: var(--team); border-color: var(--team); }
+
+/* start overlay */
+.overlay {
+  position: fixed; inset: 0; background: rgba(10, 10, 10, 0.96);
+  z-index: 100; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-direction: column; gap: 32px;
+  backdrop-filter: blur(8px);
+}
+.overlay.hidden { display: none; }
+.overlay-title { font-size: 40px; font-weight: 900; letter-spacing: -0.02em; max-width: 720px; text-align: center; line-height: 1.1; }
+.overlay-sub { font-size: 16px; color: var(--text-dim); max-width: 640px; text-align: center; line-height: 1.55; }
+.overlay-btn {
+  background: var(--accent); color: var(--bg); border: none;
+  padding: 18px 36px; font-family: inherit;
+  font-size: 13px; font-weight: 800;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer;
+}
+
+@media (max-width: 1100px) {
+  .slide { padding: 32px 24px 130px; }
+  .step-grid { grid-template-columns: 1fr; gap: 24px; }
+  .step-text h2 { font-size: 32px; }
+  h1 { font-size: 56px; }
+  h2 { font-size: 28px; }
+  .metrics-glossary { left: 24px; right: 24px; bottom: 80px; }
+  .controls { gap: 12px; }
+  .chapter-tabs { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay">
+  <div class="overlay-title">Customer Journey · 3 роли</div>
+  <div class="overlay-sub">36 слайдов с озвучкой и SVG-мокапами. Бренд (12), Блогер (15), Команда (5). Auto-advance после конца озвучки. Управление — пробел и стрелки ←→.</div>
+  <button class="overlay-btn" id="startBtn">Начать ▶</button>
+</div>
+
+<div class="progress"><div class="progress-fill" id="progress"></div></div>
+
+<div class="app">
+  <div class="deck" id="deck">
+    
+    <section class="slide ch-intro" data-idx="0">
+      <div class="page-num">1 / 36</div>
+      
+        <div class="cover">
+          <div class="badge">Customer Journey</div>
+          <h1>Customer Journey</h1>
+          <h2>Три роли, три пути — бренд, блогер, команда</h2>
+        </div>
+      
+      <audio class="audio" preload="auto" src="audio/slide-01.mp3"></audio>
+    </section>
+
+    <section class="slide ch-brand" data-idx="1">
+      <div class="page-num">2 / 36</div>
+      
+        <div class="chapter-cover">
+          <div class="chapter-num">Глава · B</div>
+          <h1>Бренд</h1>
+          <h2>12 шагов · от cold email до кнопки «повторить»</h2>
+        </div>
+      
+      <audio class="audio" preload="auto" src="audio/slide-02.mp3"></audio>
+    </section>
+
+    <section class="slide ch-brand" data-idx="2">
+      <div class="page-num">3 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BRAND</span>
+              <span class="step-num">Шаг 01</span>
+            </div>
+            <h2>Cold email</h2>
+            <p class="step-body">SDR платформы шлёт персонализированное письмо. На лендинге — три реальных кейса с UTM-таблицами и ROMI.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="40" y="50" width="320" height="180" rx="4" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="60" y="70" width="180" height="14" rx="2" fill="#C8FF00"/>
+      <rect x="60" y="98" width="280" height="8" rx="2" fill="#3A3A3A"/>
+      <rect x="60" y="114" width="240" height="8" rx="2" fill="#3A3A3A"/>
+      <rect x="60" y="130" width="260" height="8" rx="2" fill="#3A3A3A"/>
+      <rect x="60" y="160" width="100" height="28" rx="2" fill="#C8FF00"/>
+      <text x="110" y="178" font-family="Inter,sans-serif" font-size="11" font-weight="800" fill="#0A0A0A" text-anchor="middle">ANSWER</text>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>UTM</strong> — параметры URL для отслеживания источника трафика</span><span class="m"><strong>ROMI</strong> — Return on Marketing Investment — (доход − затраты) / затраты × 100%</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-03.mp3"></audio>
+    </section>
+
+    <section class="slide ch-brand" data-idx="3">
+      <div class="page-num">4 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BRAND</span>
+              <span class="step-num">Шаг 02</span>
+            </div>
+            <h2>Квалификация на лендинге</h2>
+            <p class="step-body">Форма из 5 полей: категория, средний чек, ГЕО, бюджет, дедлайн. Salebot отсеивает: нет UTM-атрибуции на сайте — отказ с инструкцией.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="60" y="30" width="280" height="190" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="80" y="50" width="120" height="10" rx="2" fill="#707070"/>
+      <rect x="80" y="70" width="240" height="22" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <rect x="80" y="100" width="120" height="10" rx="2" fill="#707070"/>
+      <rect x="80" y="120" width="240" height="22" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <rect x="80" y="150" width="120" height="10" rx="2" fill="#707070"/>
+      <rect x="80" y="170" width="240" height="22" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <rect x="80" y="200" width="120" height="14" rx="2" fill="#C8FF00"/>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>UTM</strong> — параметры URL для отслеживания источника трафика</span><span class="m"><strong>Conv</strong> — Conversion — % посетителей, совершивших целевое действие</span><span class="m"><strong>ICP</strong> — Ideal Customer Profile — описание идеального клиента бренда</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-04.mp3"></audio>
+    </section>
+
+    <section class="slide ch-brand" data-idx="4">
+      <div class="page-num">5 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BRAND</span>
+              <span class="step-num">Шаг 03</span>
+            </div>
+            <h2>Demo-звонок 15 минут</h2>
+            <p class="step-body">Менеджер показывает интерфейс CRM-кабинета бренда, разбирает кейс из его вертикали и схему атрибуции UTM+промокод.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="50" y="40" width="300" height="170" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="70" y="60" width="120" height="80" rx="4" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <circle cx="130" cy="100" r="22" fill="#C8FF00"/>
+      <text x="130" y="106" font-family="Inter,sans-serif" font-size="20" font-weight="900" fill="#0A0A0A" text-anchor="middle">B</text>
+      <rect x="210" y="60" width="120" height="80" rx="4" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <circle cx="270" cy="100" r="22" fill="#00D9FF"/>
+      <text x="270" y="106" font-family="Inter,sans-serif" font-size="20" font-weight="900" fill="#0A0A0A" text-anchor="middle">М</text>
+      <rect x="170" y="170" width="60" height="22" rx="11" fill="#C8FF00"/>
+      <text x="200" y="186" font-family="Inter,sans-serif" font-size="11" font-weight="800" fill="#0A0A0A" text-anchor="middle">15:00</text>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>CPA</strong> — Cost per Action — стоимость одного целевого действия (заявка, покупка)</span><span class="m"><strong>ROMI</strong> — Return on Marketing Investment — (доход − затраты) / затраты × 100%</span><span class="m"><strong>ER</strong> — Engagement Rate — (лайки + коммент. + репосты) / охват × 100%</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-05.mp3"></audio>
+    </section>
+
+    <section class="slide ch-brand" data-idx="5">
+      <div class="page-num">6 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BRAND</span>
+              <span class="step-num">Шаг 04</span>
+            </div>
+            <h2>Бриф в кабинете</h2>
+            <p class="step-body">Бренд заполняет шаблон: продукт, ICP, ЦА, key-message, что нельзя говорить, желаемый CPA, бюджет.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="80" y="30" width="240" height="190" rx="4" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="80" y="30" width="240" height="32" rx="4" fill="#C8FF00"/>
+      <text x="200" y="52" font-family="Inter,sans-serif" font-size="12" font-weight="900" fill="#0A0A0A" text-anchor="middle">BRIEF · #2417</text>
+      <rect x="100" y="80" width="60" height="6" rx="1" fill="#707070"/>
+      <rect x="100" y="92" width="200" height="6" rx="1" fill="#F5F5F5"/>
+      <rect x="100" y="112" width="60" height="6" rx="1" fill="#707070"/>
+      <rect x="100" y="124" width="200" height="6" rx="1" fill="#F5F5F5"/>
+      <rect x="100" y="144" width="60" height="6" rx="1" fill="#707070"/>
+      <rect x="100" y="156" width="160" height="6" rx="1" fill="#F5F5F5"/>
+      <rect x="100" y="176" width="60" height="6" rx="1" fill="#707070"/>
+      <rect x="100" y="188" width="120" height="6" rx="1" fill="#C8FF00"/>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>ICP</strong> — Ideal Customer Profile — описание идеального клиента бренда</span><span class="m"><strong>CPA</strong> — Cost per Action — стоимость одного целевого действия (заявка, покупка)</span><span class="m"><strong>KPI</strong> — Key Performance Indicator — ключевой показатель результата</span><span class="m"><strong>Бриф</strong> — документ с описанием задачи, ICP, ключевых сообщений</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-06.mp3"></audio>
+    </section>
+
+    <section class="slide ch-brand" data-idx="6">
+      <div class="page-num">7 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BRAND</span>
+              <span class="step-num">Шаг 05</span>
+            </div>
+            <h2>Шортлист 5-10 блогеров</h2>
+            <p class="step-body">Influencer Manager подбирает кандидатов под бриф с метриками каждого: подписчики, ER, прогноз CPA, прецеденты.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="40" y="30" width="320" height="180" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <text x="60" y="56" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070" letter-spacing="2">SHORTLIST 5</text>
+      <g transform="translate(60, 70)">
+        <rect width="280" height="30" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+        <circle cx="22" cy="15" r="10" fill="#C8FF00"/>
+        <rect x="44" y="9" width="100" height="5" rx="1" fill="#F5F5F5"/>
+        <rect x="44" y="18" width="60" height="4" rx="1" fill="#707070"/>
+        <text x="220" y="19" font-family="Inter,sans-serif" font-size="10" font-weight="800" fill="#C8FF00">ER 8.2%</text>
+      </g>
+      <g transform="translate(60, 108)">
+        <rect width="280" height="30" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+        <circle cx="22" cy="15" r="10" fill="#00D9FF"/>
+        <rect x="44" y="9" width="100" height="5" rx="1" fill="#F5F5F5"/>
+        <rect x="44" y="18" width="60" height="4" rx="1" fill="#707070"/>
+        <text x="220" y="19" font-family="Inter,sans-serif" font-size="10" font-weight="800" fill="#C8FF00">ER 7.4%</text>
+      </g>
+      <g transform="translate(60, 146)">
+        <rect width="280" height="30" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+        <circle cx="22" cy="15" r="10" fill="#FBBF24"/>
+        <rect x="44" y="9" width="100" height="5" rx="1" fill="#F5F5F5"/>
+        <rect x="44" y="18" width="60" height="4" rx="1" fill="#707070"/>
+        <text x="220" y="19" font-family="Inter,sans-serif" font-size="10" font-weight="800" fill="#C8FF00">ER 6.1%</text>
+      </g>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>ER</strong> — Engagement Rate — (лайки + коммент. + репосты) / охват × 100%</span><span class="m"><strong>CPA</strong> — Cost per Action — стоимость одного целевого действия (заявка, покупка)</span><span class="m"><strong>Tier</strong> — уровень блогера в каталоге: микро / средний / топ</span><span class="m"><strong>Шортлист</strong> — выборка 5-10 кандидатов под конкретный бриф</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-07.mp3"></audio>
+    </section>
+
+    <section class="slide ch-brand" data-idx="7">
+      <div class="page-num">8 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BRAND</span>
+              <span class="step-num">Шаг 06</span>
+            </div>
+            <h2>Согласование шортлиста</h2>
+            <p class="step-body">Бренд выбирает 3-5 блогеров, согласует ТЗ. Платформа — посредник, прямого контакта блогера и бренда нет.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="60" y="40" width="120" height="160" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <text x="120" y="70" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#707070" text-anchor="middle">БРЕНД</text>
+      <text x="120" y="100" font-family="Inter,sans-serif" font-size="22" font-weight="900" fill="#F5F5F5" text-anchor="middle">15 000 ₽</text>
+      <text x="120" y="125" font-family="Inter,sans-serif" font-size="9" fill="#707070" text-anchor="middle">бюджет</text>
+      <rect x="180" y="100" width="40" height="40" rx="20" fill="#C8FF00"/>
+      <text x="200" y="125" font-family="Inter,sans-serif" font-size="14" font-weight="900" fill="#0A0A0A" text-anchor="middle">⇄</text>
+      <rect x="220" y="40" width="120" height="160" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <text x="280" y="70" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#707070" text-anchor="middle">БЛОГЕР</text>
+      <text x="280" y="100" font-family="Inter,sans-serif" font-size="22" font-weight="900" fill="#F5F5F5" text-anchor="middle">12 000 ₽</text>
+      <text x="280" y="125" font-family="Inter,sans-serif" font-size="9" fill="#707070" text-anchor="middle">ставка</text>
+      <text x="200" y="170" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#C8FF00" text-anchor="middle">→ 13 500 ₽</text>
+      <text x="200" y="190" font-family="Inter,sans-serif" font-size="9" fill="#707070" text-anchor="middle">после торга</text>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>KPI</strong> — Key Performance Indicator — ключевой показатель результата</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-08.mp3"></audio>
+    </section>
+
+    <section class="slide ch-brand" data-idx="8">
+      <div class="page-num">9 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BRAND</span>
+              <span class="step-num">Шаг 07</span>
+            </div>
+            <h2>Договор и предоплата</h2>
+            <p class="step-body">Договор с платформой, не с блогерами. 50% предоплата через ЮKassa. Все УПД — через Контур.Диадок.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="100" y="30" width="200" height="180" rx="4" fill="#F5F5F5" stroke="#2A2A2A"/>
+      <rect x="120" y="50" width="120" height="8" rx="1" fill="#0A0A0A"/>
+      <rect x="120" y="70" width="160" height="4" rx="1" fill="#707070"/>
+      <rect x="120" y="80" width="160" height="4" rx="1" fill="#707070"/>
+      <rect x="120" y="90" width="120" height="4" rx="1" fill="#707070"/>
+      <rect x="120" y="110" width="160" height="4" rx="1" fill="#707070"/>
+      <rect x="120" y="120" width="140" height="4" rx="1" fill="#707070"/>
+      <rect x="120" y="140" width="160" height="4" rx="1" fill="#707070"/>
+      <rect x="120" y="150" width="120" height="4" rx="1" fill="#707070"/>
+      <path d="M 130 180 Q 145 170 160 180 T 190 180" fill="none" stroke="#C8FF00" stroke-width="2"/>
+      <rect x="200" y="172" width="80" height="20" rx="2" fill="#C8FF00"/>
+      <text x="240" y="186" font-family="Inter,sans-serif" font-size="9" font-weight="800" fill="#0A0A0A" text-anchor="middle">SIGNED</text>
+    </svg></div>
+        </div>
+      
+      <audio class="audio" preload="auto" src="audio/slide-09.mp3"></audio>
+    </section>
+
+    <section class="slide ch-brand" data-idx="9">
+      <div class="page-num">10 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BRAND</span>
+              <span class="step-num">Шаг 08</span>
+            </div>
+            <h2>Производство и превью</h2>
+            <p class="step-body">Блогеры записывают интеграции через платформу. Бренд получает превью на проверку перед публикацией.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="60" y="30" width="280" height="180" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="60" y="30" width="280" height="24" rx="6" fill="#0A0A0A"/>
+      <circle cx="78" cy="42" r="4" fill="#F87171"/>
+      <circle cx="92" cy="42" r="4" fill="#FBBF24"/>
+      <circle cx="106" cy="42" r="4" fill="#4ADE80"/>
+      <rect x="80" y="74" width="240" height="100" rx="3" fill="#0A0A0A"/>
+      <polygon points="170,108 170,156 220,132" fill="#C8FF00"/>
+      <rect x="80" y="184" width="160" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="80" y="194" width="80" height="6" rx="1" fill="#707070"/>
+      <rect x="260" y="180" width="60" height="22" rx="2" fill="#C8FF00"/>
+      <text x="290" y="195" font-family="Inter,sans-serif" font-size="10" font-weight="800" fill="#0A0A0A" text-anchor="middle">APPROVE</text>
+    </svg></div>
+        </div>
+      
+      <audio class="audio" preload="auto" src="audio/slide-10.mp3"></audio>
+    </section>
+
+    <section class="slide ch-brand" data-idx="10">
+      <div class="page-num">11 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BRAND</span>
+              <span class="step-num">Шаг 09</span>
+            </div>
+            <h2>Публикация с UTM и промокодом</h2>
+            <p class="step-body">Контент выходит с уникальной UTM-меткой `?utm_source=rutube_<channel>_<promo>` и промокодом, привязанным к каналу.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="40" y="50" width="120" height="60" rx="4" fill="#141414" stroke="#C8FF00" stroke-width="2"/>
+      <text x="100" y="76" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070" text-anchor="middle">RUTUBE</text>
+      <text x="100" y="96" font-family="Inter,sans-serif" font-size="13" font-weight="900" fill="#C8FF00" text-anchor="middle">+UTM</text>
+      <path d="M 160 80 L 240 80" stroke="#C8FF00" stroke-width="2" stroke-dasharray="4 4"/>
+      <polygon points="240,75 250,80 240,85" fill="#C8FF00"/>
+      <rect x="240" y="50" width="120" height="60" rx="4" fill="#141414" stroke="#00D9FF" stroke-width="2"/>
+      <text x="300" y="76" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070" text-anchor="middle">SHOP</text>
+      <text x="300" y="96" font-family="Inter,sans-serif" font-size="13" font-weight="900" fill="#00D9FF" text-anchor="middle">PROMO -10%</text>
+      <rect x="100" y="140" width="200" height="60" rx="4" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <text x="200" y="166" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#707070" text-anchor="middle">SALE TRACKED</text>
+      <text x="200" y="188" font-family="Inter,sans-serif" font-size="16" font-weight="900" fill="#F5F5F5" text-anchor="middle">2 480 ₽ · ROMI +84%</text>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>UTM</strong> — параметры URL для отслеживания источника трафика</span><span class="m"><strong>Промокод</strong> — уникальный код скидки, привязанный к конкретному блогеру</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-11.mp3"></audio>
+    </section>
+
+    <section class="slide ch-brand" data-idx="11">
+      <div class="page-num">12 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BRAND</span>
+              <span class="step-num">Шаг 10</span>
+            </div>
+            <h2>Лайв-дашборд атрибуции</h2>
+            <p class="step-body">В кабинете бренда — переходы по UTM, использования промокода, продажи через интеграцию с CMS, актуальный ROMI.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="20" width="360" height="200" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="40" y="40" width="80" height="160" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <rect x="56" y="60" width="50" height="6" rx="1" fill="#C8FF00"/>
+      <rect x="56" y="76" width="40" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="56" y="92" width="48" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="56" y="108" width="44" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="140" y="40" width="220" height="60" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <text x="160" y="64" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070">ROMI</text>
+      <text x="160" y="86" font-family="Inter,sans-serif" font-size="20" font-weight="900" fill="#C8FF00">+72%</text>
+      <text x="240" y="64" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070">CPA</text>
+      <text x="240" y="86" font-family="Inter,sans-serif" font-size="20" font-weight="900" fill="#F5F5F5">412 ₽</text>
+      <text x="310" y="64" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070">CONV</text>
+      <text x="310" y="86" font-family="Inter,sans-serif" font-size="20" font-weight="900" fill="#00D9FF">3.4%</text>
+      <rect x="140" y="110" width="220" height="90" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <polyline points="160,180 190,160 220,170 250,140 280,150 310,120 340,130" fill="none" stroke="#C8FF00" stroke-width="2"/>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>UTM</strong> — параметры URL для отслеживания источника трафика</span><span class="m"><strong>Промокод</strong> — уникальный код скидки, привязанный к конкретному блогеру</span><span class="m"><strong>ROMI</strong> — Return on Marketing Investment — (доход − затраты) / затраты × 100%</span><span class="m"><strong>CPA</strong> — Cost per Action — стоимость одного целевого действия (заявка, покупка)</span><span class="m"><strong>Conv</strong> — Conversion — % посетителей, совершивших целевое действие</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-12.mp3"></audio>
+    </section>
+
+    <section class="slide ch-brand" data-idx="12">
+      <div class="page-num">13 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BRAND</span>
+              <span class="step-num">Шаг 11</span>
+            </div>
+            <h2>Финальный расчёт через 30 дней</h2>
+            <p class="step-body">Платформа выплачивает блогерам остаток 50%, удерживает свою комиссию 20%. Бренд получает финальный отчёт.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="80" y="60" width="240" height="140" rx="8" fill="#141414" stroke="#C8FF00" stroke-width="2"/>
+      <rect x="100" y="80" width="60" height="10" rx="1" fill="#707070"/>
+      <text x="100" y="130" font-family="Inter,sans-serif" font-size="32" font-weight="900" fill="#C8FF00">15 000 ₽</text>
+      <rect x="100" y="150" width="40" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="100" y="162" width="80" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="240" y="170" width="60" height="20" rx="2" fill="#C8FF00"/>
+      <text x="270" y="184" font-family="Inter,sans-serif" font-size="9" font-weight="800" fill="#0A0A0A" text-anchor="middle">PAID</text>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>ROMI</strong> — Return on Marketing Investment — (доход − затраты) / затраты × 100%</span><span class="m"><strong>CPA</strong> — Cost per Action — стоимость одного целевого действия (заявка, покупка)</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-13.mp3"></audio>
+    </section>
+
+    <section class="slide ch-brand" data-idx="13">
+      <div class="page-num">14 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BRAND</span>
+              <span class="step-num">Шаг 12</span>
+            </div>
+            <h2>Кнопка «повторить»</h2>
+            <p class="step-body">В кабинете — кнопка «повторить»: переиспользует понравившихся блогеров с теми же UTM-схемами. Это и есть LTV платформы.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="120" r="80" fill="none" stroke="#2A2A2A" stroke-width="2"/>
+      <path d="M 200 40 A 80 80 0 1 1 130 168" fill="none" stroke="#C8FF00" stroke-width="3"/>
+      <polygon points="125,160 130,170 138,162" fill="#C8FF00"/>
+      <text x="200" y="115" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#707070" text-anchor="middle">КНОПКА</text>
+      <text x="200" y="135" font-family="Inter,sans-serif" font-size="20" font-weight="900" fill="#C8FF00" text-anchor="middle">REPEAT</text>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>LTV</strong> — Lifetime Value — суммарный доход с одного клиента за всю историю</span><span class="m"><strong>Repeat Rate</strong> — % клиентов, совершивших повторную покупку в окне времени</span><span class="m"><strong>Retention</strong> — % пользователей, которые остаются активными через N дней</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-14.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="14">
+      <div class="page-num">15 / 36</div>
+      
+        <div class="chapter-cover">
+          <div class="chapter-num">Глава · B</div>
+          <h1>Блогер</h1>
+          <h2>15 шагов · от парсинга канала до накопленной репутации</h2>
+        </div>
+      
+      <audio class="audio" preload="auto" src="audio/slide-15.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="15">
+      <div class="page-num">16 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BLOGGER</span>
+              <span class="step-num">Шаг 01</span>
+            </div>
+            <h2>Парсинг публичных метрик</h2>
+            <p class="step-body">Платформа парсит публичные метрики канала: подписчики, средний просмотр, ER. Это ежедневный автоматический процесс.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="40" y="40" width="320" height="160" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="60" y="60" width="280" height="14" rx="2" fill="#0A0A0A"/>
+      <text x="68" y="71" font-family="JetBrains Mono,monospace" font-size="9" fill="#C8FF00">$ python parser.py --rutube</text>
+      <text x="68" y="100" font-family="JetBrains Mono,monospace" font-size="9" fill="#707070">scanning channel: @beauty_blogger_ru</text>
+      <text x="68" y="116" font-family="JetBrains Mono,monospace" font-size="9" fill="#707070">→ subs: 124,500</text>
+      <text x="68" y="132" font-family="JetBrains Mono,monospace" font-size="9" fill="#707070">→ avg_views: 18,200</text>
+      <text x="68" y="148" font-family="JetBrains Mono,monospace" font-size="9" fill="#707070">→ ER: 7.4%</text>
+      <text x="68" y="164" font-family="JetBrains Mono,monospace" font-size="9" fill="#C8FF00">→ tier: MIDDLE · score 84/100</text>
+      <text x="68" y="184" font-family="JetBrains Mono,monospace" font-size="9" fill="#4ADE80">✓ added to catalog</text>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>ER</strong> — Engagement Rate — (лайки + коммент. + репосты) / охват × 100%</span><span class="m"><strong>CPV</strong> — Cost per View — стоимость одного просмотра</span><span class="m"><strong>Tier</strong> — уровень блогера в каталоге: микро / средний / топ</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-16.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="16">
+      <div class="page-num">17 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BLOGGER</span>
+              <span class="step-num">Шаг 02</span>
+            </div>
+            <h2>Персональное сообщение</h2>
+            <p class="step-body">Платформа шлёт персональное сообщение через email или DM. Не broadcast — конкретные релевантные бренды по тематике канала.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="60" y="20" width="280" height="200" rx="20" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="60" y="20" width="280" height="40" rx="20" fill="#0A0A0A"/>
+      <circle cx="90" cy="40" r="14" fill="#C8FF00"/>
+      <text x="115" y="38" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#F5F5F5">RuTube Platform</text>
+      <text x="115" y="50" font-family="Inter,sans-serif" font-size="9" fill="#707070">online</text>
+      <rect x="80" y="80" width="200" height="40" rx="12" fill="#1F1F1F"/>
+      <text x="90" y="98" font-family="Inter,sans-serif" font-size="10" fill="#F5F5F5">Привет! Видим твой канал…</text>
+      <text x="90" y="113" font-family="Inter,sans-serif" font-size="10" fill="#F5F5F5">Есть бренд под твою тему.</text>
+      <rect x="160" y="135" width="160" height="40" rx="12" fill="#C8FF00"/>
+      <text x="170" y="153" font-family="Inter,sans-serif" font-size="10" fill="#0A0A0A" font-weight="700">Интересно, расскажи!</text>
+      <text x="170" y="168" font-family="Inter,sans-serif" font-size="9" fill="#0A0A0A">12:34 ✓✓</text>
+    </svg></div>
+        </div>
+      
+      <audio class="audio" preload="auto" src="audio/slide-17.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="17">
+      <div class="page-num">18 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BLOGGER</span>
+              <span class="step-num">Шаг 03</span>
+            </div>
+            <h2>Регистрация на лендинге</h2>
+            <p class="step-body">Лендинг для блогеров. Подтверждение канала — короткий код в описании последнего видео или Pinned-комментарий.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="60" y="30" width="280" height="190" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="80" y="50" width="120" height="10" rx="2" fill="#707070"/>
+      <rect x="80" y="70" width="240" height="22" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <rect x="80" y="100" width="120" height="10" rx="2" fill="#707070"/>
+      <rect x="80" y="120" width="240" height="22" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <rect x="80" y="150" width="120" height="10" rx="2" fill="#707070"/>
+      <rect x="80" y="170" width="240" height="22" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <rect x="80" y="200" width="120" height="14" rx="2" fill="#C8FF00"/>
+    </svg></div>
+        </div>
+      
+      <audio class="audio" preload="auto" src="audio/slide-18.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="18">
+      <div class="page-num">19 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BLOGGER</span>
+              <span class="step-num">Шаг 04</span>
+            </div>
+            <h2>Заполнение профиля</h2>
+            <p class="step-body">Тематика, частота публикаций, средний просмотр, минимальная ставка, типы форматов: продакт-плейсмент, обзор, упоминание.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="60" y="30" width="280" height="180" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <circle cx="120" cy="80" r="30" fill="#C8FF00"/>
+      <text x="120" y="86" font-family="Inter,sans-serif" font-size="22" font-weight="900" fill="#0A0A0A" text-anchor="middle">М</text>
+      <rect x="160" y="60" width="120" height="10" rx="2" fill="#F5F5F5"/>
+      <rect x="160" y="78" width="80" height="6" rx="1" fill="#707070"/>
+      <rect x="160" y="92" width="100" height="6" rx="1" fill="#707070"/>
+      <g transform="translate(80, 130)">
+        <rect width="80" height="50" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+        <text x="40" y="22" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070" text-anchor="middle">SUBS</text>
+        <text x="40" y="40" font-family="Inter,sans-serif" font-size="13" font-weight="900" fill="#F5F5F5" text-anchor="middle">124K</text>
+      </g>
+      <g transform="translate(170, 130)">
+        <rect width="80" height="50" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+        <text x="40" y="22" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070" text-anchor="middle">ER</text>
+        <text x="40" y="40" font-family="Inter,sans-serif" font-size="13" font-weight="900" fill="#C8FF00" text-anchor="middle">7.4%</text>
+      </g>
+      <g transform="translate(260, 130)">
+        <rect width="80" height="50" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+        <text x="40" y="22" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070" text-anchor="middle">RATE</text>
+        <text x="40" y="40" font-family="Inter,sans-serif" font-size="13" font-weight="900" fill="#F5F5F5" text-anchor="middle">15К</text>
+      </g>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>ER</strong> — Engagement Rate — (лайки + коммент. + репосты) / охват × 100%</span><span class="m"><strong>CPV</strong> — Cost per View — стоимость одного просмотра</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-19.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="19">
+      <div class="page-num">20 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BLOGGER</span>
+              <span class="step-num">Шаг 05</span>
+            </div>
+            <h2>Автоматический скоринг</h2>
+            <p class="step-body">Платформа вычисляет ER, retention, прогнозный CPV → присваивает tier (микро/средний/топ) и базовую цену.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="20" width="360" height="200" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="40" y="40" width="80" height="160" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <rect x="56" y="60" width="50" height="6" rx="1" fill="#C8FF00"/>
+      <rect x="56" y="76" width="40" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="56" y="92" width="48" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="56" y="108" width="44" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="140" y="40" width="220" height="60" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <text x="160" y="64" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070">ROMI</text>
+      <text x="160" y="86" font-family="Inter,sans-serif" font-size="20" font-weight="900" fill="#C8FF00">+72%</text>
+      <text x="240" y="64" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070">CPA</text>
+      <text x="240" y="86" font-family="Inter,sans-serif" font-size="20" font-weight="900" fill="#F5F5F5">412 ₽</text>
+      <text x="310" y="64" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070">CONV</text>
+      <text x="310" y="86" font-family="Inter,sans-serif" font-size="20" font-weight="900" fill="#00D9FF">3.4%</text>
+      <rect x="140" y="110" width="220" height="90" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <polyline points="160,180 190,160 220,170 250,140 280,150 310,120 340,130" fill="none" stroke="#C8FF00" stroke-width="2"/>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>ER</strong> — Engagement Rate — (лайки + коммент. + репосты) / охват × 100%</span><span class="m"><strong>CPV</strong> — Cost per View — стоимость одного просмотра</span><span class="m"><strong>Retention</strong> — % пользователей, которые остаются активными через N дней</span><span class="m"><strong>Tier</strong> — уровень блогера в каталоге: микро / средний / топ</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-20.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="20">
+      <div class="page-num">21 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BLOGGER</span>
+              <span class="step-num">Шаг 06</span>
+            </div>
+            <h2>Каталог Influencer Manager'ов</h2>
+            <p class="step-body">Канал попадает в каталог, видимый только Influencer Manager'ам. Бренды каталог не видят — отбор идёт через шортлист.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="40" y="30" width="320" height="180" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <text x="60" y="56" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070" letter-spacing="2">SHORTLIST 5</text>
+      <g transform="translate(60, 70)">
+        <rect width="280" height="30" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+        <circle cx="22" cy="15" r="10" fill="#C8FF00"/>
+        <rect x="44" y="9" width="100" height="5" rx="1" fill="#F5F5F5"/>
+        <rect x="44" y="18" width="60" height="4" rx="1" fill="#707070"/>
+        <text x="220" y="19" font-family="Inter,sans-serif" font-size="10" font-weight="800" fill="#C8FF00">ER 8.2%</text>
+      </g>
+      <g transform="translate(60, 108)">
+        <rect width="280" height="30" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+        <circle cx="22" cy="15" r="10" fill="#00D9FF"/>
+        <rect x="44" y="9" width="100" height="5" rx="1" fill="#F5F5F5"/>
+        <rect x="44" y="18" width="60" height="4" rx="1" fill="#707070"/>
+        <text x="220" y="19" font-family="Inter,sans-serif" font-size="10" font-weight="800" fill="#C8FF00">ER 7.4%</text>
+      </g>
+      <g transform="translate(60, 146)">
+        <rect width="280" height="30" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+        <circle cx="22" cy="15" r="10" fill="#FBBF24"/>
+        <rect x="44" y="9" width="100" height="5" rx="1" fill="#F5F5F5"/>
+        <rect x="44" y="18" width="60" height="4" rx="1" fill="#707070"/>
+        <text x="220" y="19" font-family="Inter,sans-serif" font-size="10" font-weight="800" fill="#C8FF00">ER 6.1%</text>
+      </g>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>Шортлист</strong> — выборка 5-10 кандидатов под конкретный бриф</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-21.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="21">
+      <div class="page-num">22 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BLOGGER</span>
+              <span class="step-num">Шаг 07</span>
+            </div>
+            <h2>Запрос с готовым брифом</h2>
+            <p class="step-body">Блогер получает запрос от платформы с готовым брифом, бюджетом, дедлайном, ожидаемыми KPI.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="80" y="30" width="240" height="190" rx="4" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="80" y="30" width="240" height="32" rx="4" fill="#C8FF00"/>
+      <text x="200" y="52" font-family="Inter,sans-serif" font-size="12" font-weight="900" fill="#0A0A0A" text-anchor="middle">BRIEF · #2417</text>
+      <rect x="100" y="80" width="60" height="6" rx="1" fill="#707070"/>
+      <rect x="100" y="92" width="200" height="6" rx="1" fill="#F5F5F5"/>
+      <rect x="100" y="112" width="60" height="6" rx="1" fill="#707070"/>
+      <rect x="100" y="124" width="200" height="6" rx="1" fill="#F5F5F5"/>
+      <rect x="100" y="144" width="60" height="6" rx="1" fill="#707070"/>
+      <rect x="100" y="156" width="160" height="6" rx="1" fill="#F5F5F5"/>
+      <rect x="100" y="176" width="60" height="6" rx="1" fill="#707070"/>
+      <rect x="100" y="188" width="120" height="6" rx="1" fill="#C8FF00"/>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>KPI</strong> — Key Performance Indicator — ключевой показатель результата</span><span class="m"><strong>Бриф</strong> — документ с описанием задачи, ICP, ключевых сообщений</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-22.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="22">
+      <div class="page-num">23 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BLOGGER</span>
+              <span class="step-num">Шаг 08</span>
+            </div>
+            <h2>Согласие или торг</h2>
+            <p class="step-body">Блогер принимает / отказывается / предлагает свою цену. Платформа выступает медиатором между блогером и брендом.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="60" y="40" width="120" height="160" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <text x="120" y="70" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#707070" text-anchor="middle">БРЕНД</text>
+      <text x="120" y="100" font-family="Inter,sans-serif" font-size="22" font-weight="900" fill="#F5F5F5" text-anchor="middle">15 000 ₽</text>
+      <text x="120" y="125" font-family="Inter,sans-serif" font-size="9" fill="#707070" text-anchor="middle">бюджет</text>
+      <rect x="180" y="100" width="40" height="40" rx="20" fill="#C8FF00"/>
+      <text x="200" y="125" font-family="Inter,sans-serif" font-size="14" font-weight="900" fill="#0A0A0A" text-anchor="middle">⇄</text>
+      <rect x="220" y="40" width="120" height="160" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <text x="280" y="70" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#707070" text-anchor="middle">БЛОГЕР</text>
+      <text x="280" y="100" font-family="Inter,sans-serif" font-size="22" font-weight="900" fill="#F5F5F5" text-anchor="middle">12 000 ₽</text>
+      <text x="280" y="125" font-family="Inter,sans-serif" font-size="9" fill="#707070" text-anchor="middle">ставка</text>
+      <text x="200" y="170" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#C8FF00" text-anchor="middle">→ 13 500 ₽</text>
+      <text x="200" y="190" font-family="Inter,sans-serif" font-size="9" fill="#707070" text-anchor="middle">после торга</text>
+    </svg></div>
+        </div>
+      
+      <audio class="audio" preload="auto" src="audio/slide-23.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="23">
+      <div class="page-num">24 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BLOGGER</span>
+              <span class="step-num">Шаг 09</span>
+            </div>
+            <h2>Договор оферты</h2>
+            <p class="step-body">Самозанятый или ИП. Договор оферты с платформой через Контур.Диадок, чек выдаётся через API Тинькофф Самозанятые.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="100" y="30" width="200" height="180" rx="4" fill="#F5F5F5" stroke="#2A2A2A"/>
+      <rect x="120" y="50" width="120" height="8" rx="1" fill="#0A0A0A"/>
+      <rect x="120" y="70" width="160" height="4" rx="1" fill="#707070"/>
+      <rect x="120" y="80" width="160" height="4" rx="1" fill="#707070"/>
+      <rect x="120" y="90" width="120" height="4" rx="1" fill="#707070"/>
+      <rect x="120" y="110" width="160" height="4" rx="1" fill="#707070"/>
+      <rect x="120" y="120" width="140" height="4" rx="1" fill="#707070"/>
+      <rect x="120" y="140" width="160" height="4" rx="1" fill="#707070"/>
+      <rect x="120" y="150" width="120" height="4" rx="1" fill="#707070"/>
+      <path d="M 130 180 Q 145 170 160 180 T 190 180" fill="none" stroke="#C8FF00" stroke-width="2"/>
+      <rect x="200" y="172" width="80" height="20" rx="2" fill="#C8FF00"/>
+      <text x="240" y="186" font-family="Inter,sans-serif" font-size="9" font-weight="800" fill="#0A0A0A" text-anchor="middle">SIGNED</text>
+    </svg></div>
+        </div>
+      
+      <audio class="audio" preload="auto" src="audio/slide-24.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="24">
+      <div class="page-num">25 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BLOGGER</span>
+              <span class="step-num">Шаг 10</span>
+            </div>
+            <h2>Получение финального брифа</h2>
+            <p class="step-body">Блогер получает финальный бриф с текстом, ссылками, UTM-меткой, промокодом. Всё готово к производству.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="80" y="30" width="240" height="190" rx="4" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="80" y="30" width="240" height="32" rx="4" fill="#C8FF00"/>
+      <text x="200" y="52" font-family="Inter,sans-serif" font-size="12" font-weight="900" fill="#0A0A0A" text-anchor="middle">BRIEF · #2417</text>
+      <rect x="100" y="80" width="60" height="6" rx="1" fill="#707070"/>
+      <rect x="100" y="92" width="200" height="6" rx="1" fill="#F5F5F5"/>
+      <rect x="100" y="112" width="60" height="6" rx="1" fill="#707070"/>
+      <rect x="100" y="124" width="200" height="6" rx="1" fill="#F5F5F5"/>
+      <rect x="100" y="144" width="60" height="6" rx="1" fill="#707070"/>
+      <rect x="100" y="156" width="160" height="6" rx="1" fill="#F5F5F5"/>
+      <rect x="100" y="176" width="60" height="6" rx="1" fill="#707070"/>
+      <rect x="100" y="188" width="120" height="6" rx="1" fill="#C8FF00"/>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>UTM</strong> — параметры URL для отслеживания источника трафика</span><span class="m"><strong>Промокод</strong> — уникальный код скидки, привязанный к конкретному блогеру</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-25.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="25">
+      <div class="page-num">26 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BLOGGER</span>
+              <span class="step-num">Шаг 11</span>
+            </div>
+            <h2>Производство интеграции</h2>
+            <p class="step-body">Снимает интеграцию по брифу. Может задать вопросы Influencer Manager'у в чате кабинета.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="100" y="60" width="200" height="130" rx="6" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <circle cx="160" cy="100" r="12" fill="#F87171"/>
+      <text x="160" y="105" font-family="Inter,sans-serif" font-size="9" font-weight="900" fill="#FFF" text-anchor="middle">REC</text>
+      <rect x="110" y="170" width="100" height="10" rx="2" fill="#3A3A3A"/>
+      <rect x="110" y="170" width="40" height="10" rx="2" fill="#F87171"/>
+      <rect x="220" y="60" width="80" height="130" rx="3" fill="#141414" stroke="#2A2A2A"/>
+      <text x="260" y="86" font-family="Inter,sans-serif" font-size="8" font-weight="700" fill="#707070" text-anchor="middle">SCRIPT</text>
+      <rect x="232" y="100" width="56" height="3" rx="1" fill="#707070"/>
+      <rect x="232" y="108" width="56" height="3" rx="1" fill="#707070"/>
+      <rect x="232" y="116" width="40" height="3" rx="1" fill="#707070"/>
+      <rect x="232" y="128" width="56" height="3" rx="1" fill="#707070"/>
+      <rect x="232" y="136" width="48" height="3" rx="1" fill="#707070"/>
+      <rect x="232" y="148" width="56" height="3" rx="1" fill="#C8FF00"/>
+      <rect x="232" y="156" width="56" height="3" rx="1" fill="#C8FF00"/>
+    </svg></div>
+        </div>
+      
+      <audio class="audio" preload="auto" src="audio/slide-26.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="26">
+      <div class="page-num">27 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BLOGGER</span>
+              <span class="step-num">Шаг 12</span>
+            </div>
+            <h2>Превью и согласование</h2>
+            <p class="step-body">Загружает черновик в кабинет. Producer платформы проверяет соответствие брифу, бренд утверждает.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="60" y="30" width="280" height="180" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="60" y="30" width="280" height="24" rx="6" fill="#0A0A0A"/>
+      <circle cx="78" cy="42" r="4" fill="#F87171"/>
+      <circle cx="92" cy="42" r="4" fill="#FBBF24"/>
+      <circle cx="106" cy="42" r="4" fill="#4ADE80"/>
+      <rect x="80" y="74" width="240" height="100" rx="3" fill="#0A0A0A"/>
+      <polygon points="170,108 170,156 220,132" fill="#C8FF00"/>
+      <rect x="80" y="184" width="160" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="80" y="194" width="80" height="6" rx="1" fill="#707070"/>
+      <rect x="260" y="180" width="60" height="22" rx="2" fill="#C8FF00"/>
+      <text x="290" y="195" font-family="Inter,sans-serif" font-size="10" font-weight="800" fill="#0A0A0A" text-anchor="middle">APPROVE</text>
+    </svg></div>
+        </div>
+      
+      <audio class="audio" preload="auto" src="audio/slide-27.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="27">
+      <div class="page-num">28 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BLOGGER</span>
+              <span class="step-num">Шаг 13</span>
+            </div>
+            <h2>Публикация и автозамер</h2>
+            <p class="step-body">Выпускает контент на канал. Парсер автоматически фиксирует метрики просмотров и взаимодействий.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="40" y="50" width="120" height="60" rx="4" fill="#141414" stroke="#C8FF00" stroke-width="2"/>
+      <text x="100" y="76" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070" text-anchor="middle">RUTUBE</text>
+      <text x="100" y="96" font-family="Inter,sans-serif" font-size="13" font-weight="900" fill="#C8FF00" text-anchor="middle">+UTM</text>
+      <path d="M 160 80 L 240 80" stroke="#C8FF00" stroke-width="2" stroke-dasharray="4 4"/>
+      <polygon points="240,75 250,80 240,85" fill="#C8FF00"/>
+      <rect x="240" y="50" width="120" height="60" rx="4" fill="#141414" stroke="#00D9FF" stroke-width="2"/>
+      <text x="300" y="76" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070" text-anchor="middle">SHOP</text>
+      <text x="300" y="96" font-family="Inter,sans-serif" font-size="13" font-weight="900" fill="#00D9FF" text-anchor="middle">PROMO -10%</text>
+      <rect x="100" y="140" width="200" height="60" rx="4" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <text x="200" y="166" font-family="Inter,sans-serif" font-size="10" font-weight="700" fill="#707070" text-anchor="middle">SALE TRACKED</text>
+      <text x="200" y="188" font-family="Inter,sans-serif" font-size="16" font-weight="900" fill="#F5F5F5" text-anchor="middle">2 480 ₽ · ROMI +84%</text>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>CPV</strong> — Cost per View — стоимость одного просмотра</span><span class="m"><strong>ER</strong> — Engagement Rate — (лайки + коммент. + репосты) / охват × 100%</span><span class="m"><strong>UTM</strong> — параметры URL для отслеживания источника трафика</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-28.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="28">
+      <div class="page-num">29 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BLOGGER</span>
+              <span class="step-num">Шаг 14</span>
+            </div>
+            <h2>Выплата 50% сразу</h2>
+            <p class="step-body">Сразу после публикации — выплата через API Тинькофф Самозанятые. Деньги на карте в течение 15 минут.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="80" y="60" width="240" height="140" rx="8" fill="#141414" stroke="#C8FF00" stroke-width="2"/>
+      <rect x="100" y="80" width="60" height="10" rx="1" fill="#707070"/>
+      <text x="100" y="130" font-family="Inter,sans-serif" font-size="32" font-weight="900" fill="#C8FF00">15 000 ₽</text>
+      <rect x="100" y="150" width="40" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="100" y="162" width="80" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="240" y="170" width="60" height="20" rx="2" fill="#C8FF00"/>
+      <text x="270" y="184" font-family="Inter,sans-serif" font-size="9" font-weight="800" fill="#0A0A0A" text-anchor="middle">PAID</text>
+    </svg></div>
+        </div>
+      
+      <audio class="audio" preload="auto" src="audio/slide-29.mp3"></audio>
+    </section>
+
+    <section class="slide ch-blogger" data-idx="29">
+      <div class="page-num">30 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">BLOGGER</span>
+              <span class="step-num">Шаг 15</span>
+            </div>
+            <h2>Финал 50% и накопленная история</h2>
+            <p class="step-body">Через 30 дней — финальная выплата, бонус за перевыполнение KPI. История кампаний влияет на скоринг и базовую ставку.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="120" r="80" fill="none" stroke="#2A2A2A" stroke-width="2"/>
+      <path d="M 200 40 A 80 80 0 1 1 130 168" fill="none" stroke="#C8FF00" stroke-width="3"/>
+      <polygon points="125,160 130,170 138,162" fill="#C8FF00"/>
+      <text x="200" y="115" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#707070" text-anchor="middle">КНОПКА</text>
+      <text x="200" y="135" font-family="Inter,sans-serif" font-size="20" font-weight="900" fill="#C8FF00" text-anchor="middle">REPEAT</text>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>KPI</strong> — Key Performance Indicator — ключевой показатель результата</span><span class="m"><strong>Repeat Rate</strong> — % клиентов, совершивших повторную покупку в окне времени</span><span class="m"><strong>Retention</strong> — % пользователей, которые остаются активными через N дней</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-30.mp3"></audio>
+    </section>
+
+    <section class="slide ch-team" data-idx="30">
+      <div class="page-num">31 / 36</div>
+      
+        <div class="chapter-cover">
+          <div class="chapter-num">Глава · T</div>
+          <h1>Команда платформы</h1>
+          <h2>5 ролей в пилоте · от Project Lead до Producer</h2>
+        </div>
+      
+      <audio class="audio" preload="auto" src="audio/slide-31.mp3"></audio>
+    </section>
+
+    <section class="slide ch-team" data-idx="31">
+      <div class="page-num">32 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">TEAM</span>
+              <span class="step-num">Шаг 01</span>
+            </div>
+            <h2>Project Lead</h2>
+            <p class="step-body">Стратегия, стейкхолдеры, бюджет, найм, решение Go/Fix/Stop. Отчёт инвесторам раз в 2 недели.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="80" y="40" width="240" height="170" rx="6" fill="#141414" stroke="#C8FF00" stroke-width="2"/>
+      <circle cx="200" cy="90" r="32" fill="#C8FF00"/>
+      <circle cx="200" cy="84" r="10" fill="#0A0A0A"/>
+      <path d="M 178 110 Q 200 96 222 110" fill="#0A0A0A"/>
+      <rect x="120" y="140" width="160" height="6" rx="1" fill="#F5F5F5"/>
+      <rect x="120" y="155" width="120" height="4" rx="1" fill="#707070"/>
+      <rect x="120" y="165" width="140" height="4" rx="1" fill="#707070"/>
+      <rect x="120" y="175" width="100" height="4" rx="1" fill="#707070"/>
+      <rect x="100" y="190" width="200" height="10" rx="2" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <rect x="100" y="190" width="120" height="10" rx="2" fill="#C8FF00"/>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>KPI</strong> — Key Performance Indicator — ключевой показатель результата</span><span class="m"><strong>ROMI</strong> — Return on Marketing Investment — (доход − затраты) / затраты × 100%</span><span class="m"><strong>Conv</strong> — Conversion — % посетителей, совершивших целевое действие</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-32.mp3"></audio>
+    </section>
+
+    <section class="slide ch-team" data-idx="32">
+      <div class="page-num">33 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">TEAM</span>
+              <span class="step-num">Шаг 02</span>
+            </div>
+            <h2>SDR — Sales Development</h2>
+            <p class="step-body">Outbound к 50 брендам/мес: cold email + cold call в amoCRM. KPI пилота — 5 встреч из 50.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="40" y="50" width="320" height="180" rx="4" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="60" y="70" width="180" height="14" rx="2" fill="#C8FF00"/>
+      <rect x="60" y="98" width="280" height="8" rx="2" fill="#3A3A3A"/>
+      <rect x="60" y="114" width="240" height="8" rx="2" fill="#3A3A3A"/>
+      <rect x="60" y="130" width="260" height="8" rx="2" fill="#3A3A3A"/>
+      <rect x="60" y="160" width="100" height="28" rx="2" fill="#C8FF00"/>
+      <text x="110" y="178" font-family="Inter,sans-serif" font-size="11" font-weight="800" fill="#0A0A0A" text-anchor="middle">ANSWER</text>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>Conv</strong> — Conversion — % посетителей, совершивших целевое действие</span><span class="m"><strong>KPI</strong> — Key Performance Indicator — ключевой показатель результата</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-33.mp3"></audio>
+    </section>
+
+    <section class="slide ch-team" data-idx="33">
+      <div class="page-num">34 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">TEAM</span>
+              <span class="step-num">Шаг 03</span>
+            </div>
+            <h2>Influencer Manager</h2>
+            <p class="step-body">База 30+ блогеров: парсинг новых, скоринг, переговоры по сделкам, разрешение споров между блогером и брендом.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="40" y="30" width="320" height="180" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <text x="60" y="56" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070" letter-spacing="2">SHORTLIST 5</text>
+      <g transform="translate(60, 70)">
+        <rect width="280" height="30" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+        <circle cx="22" cy="15" r="10" fill="#C8FF00"/>
+        <rect x="44" y="9" width="100" height="5" rx="1" fill="#F5F5F5"/>
+        <rect x="44" y="18" width="60" height="4" rx="1" fill="#707070"/>
+        <text x="220" y="19" font-family="Inter,sans-serif" font-size="10" font-weight="800" fill="#C8FF00">ER 8.2%</text>
+      </g>
+      <g transform="translate(60, 108)">
+        <rect width="280" height="30" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+        <circle cx="22" cy="15" r="10" fill="#00D9FF"/>
+        <rect x="44" y="9" width="100" height="5" rx="1" fill="#F5F5F5"/>
+        <rect x="44" y="18" width="60" height="4" rx="1" fill="#707070"/>
+        <text x="220" y="19" font-family="Inter,sans-serif" font-size="10" font-weight="800" fill="#C8FF00">ER 7.4%</text>
+      </g>
+      <g transform="translate(60, 146)">
+        <rect width="280" height="30" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+        <circle cx="22" cy="15" r="10" fill="#FBBF24"/>
+        <rect x="44" y="9" width="100" height="5" rx="1" fill="#F5F5F5"/>
+        <rect x="44" y="18" width="60" height="4" rx="1" fill="#707070"/>
+        <text x="220" y="19" font-family="Inter,sans-serif" font-size="10" font-weight="800" fill="#C8FF00">ER 6.1%</text>
+      </g>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>ER</strong> — Engagement Rate — (лайки + коммент. + репосты) / охват × 100%</span><span class="m"><strong>Tier</strong> — уровень блогера в каталоге: микро / средний / топ</span><span class="m"><strong>Шортлист</strong> — выборка 5-10 кандидатов под конкретный бриф</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-34.mp3"></audio>
+    </section>
+
+    <section class="slide ch-team" data-idx="34">
+      <div class="page-num">35 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">TEAM</span>
+              <span class="step-num">Шаг 04</span>
+            </div>
+            <h2>Analyst</h2>
+            <p class="step-body">Атрибуция продаж, ROMI calc, retention-метрики. Каждую пятницу — отчёт по трём метрикам матрицы пилота.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="20" width="360" height="200" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="40" y="40" width="80" height="160" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <rect x="56" y="60" width="50" height="6" rx="1" fill="#C8FF00"/>
+      <rect x="56" y="76" width="40" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="56" y="92" width="48" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="56" y="108" width="44" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="140" y="40" width="220" height="60" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <text x="160" y="64" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070">ROMI</text>
+      <text x="160" y="86" font-family="Inter,sans-serif" font-size="20" font-weight="900" fill="#C8FF00">+72%</text>
+      <text x="240" y="64" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070">CPA</text>
+      <text x="240" y="86" font-family="Inter,sans-serif" font-size="20" font-weight="900" fill="#F5F5F5">412 ₽</text>
+      <text x="310" y="64" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#707070">CONV</text>
+      <text x="310" y="86" font-family="Inter,sans-serif" font-size="20" font-weight="900" fill="#00D9FF">3.4%</text>
+      <rect x="140" y="110" width="220" height="90" rx="3" fill="#0A0A0A" stroke="#2A2A2A"/>
+      <polyline points="160,180 190,160 220,170 250,140 280,150 310,120 340,130" fill="none" stroke="#C8FF00" stroke-width="2"/>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>ROMI</strong> — Return on Marketing Investment — (доход − затраты) / затраты × 100%</span><span class="m"><strong>CPA</strong> — Cost per Action — стоимость одного целевого действия (заявка, покупка)</span><span class="m"><strong>Retention</strong> — % пользователей, которые остаются активными через N дней</span><span class="m"><strong>Repeat Rate</strong> — % клиентов, совершивших повторную покупку в окне времени</span><span class="m"><strong>KPI</strong> — Key Performance Indicator — ключевой показатель результата</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-35.mp3"></audio>
+    </section>
+
+    <section class="slide ch-team" data-idx="35">
+      <div class="page-num">36 / 36</div>
+      
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-meta">
+              <span class="step-chapter">TEAM</span>
+              <span class="step-num">Шаг 05</span>
+            </div>
+            <h2>Producer (part-time)</h2>
+            <p class="step-body">Модерация контента, проверка UTM/промокодов в финальной публикации. После пилота — full-time.</p>
+          </div>
+          <div class="step-svg"><svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+      <rect x="60" y="30" width="280" height="180" rx="6" fill="#141414" stroke="#2A2A2A"/>
+      <rect x="60" y="30" width="280" height="24" rx="6" fill="#0A0A0A"/>
+      <circle cx="78" cy="42" r="4" fill="#F87171"/>
+      <circle cx="92" cy="42" r="4" fill="#FBBF24"/>
+      <circle cx="106" cy="42" r="4" fill="#4ADE80"/>
+      <rect x="80" y="74" width="240" height="100" rx="3" fill="#0A0A0A"/>
+      <polygon points="170,108 170,156 220,132" fill="#C8FF00"/>
+      <rect x="80" y="184" width="160" height="6" rx="1" fill="#3A3A3A"/>
+      <rect x="80" y="194" width="80" height="6" rx="1" fill="#707070"/>
+      <rect x="260" y="180" width="60" height="22" rx="2" fill="#C8FF00"/>
+      <text x="290" y="195" font-family="Inter,sans-serif" font-size="10" font-weight="800" fill="#0A0A0A" text-anchor="middle">APPROVE</text>
+    </svg></div>
+        </div>
+      <div class="metrics-glossary"><span class="m"><strong>UTM</strong> — параметры URL для отслеживания источника трафика</span><span class="m"><strong>Промокод</strong> — уникальный код скидки, привязанный к конкретному блогеру</span></div>
+      <audio class="audio" preload="auto" src="audio/slide-36.mp3"></audio>
+    </section>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="prevBtn">← Назад</button>
+    <button class="btn primary" id="playBtn">❚❚ Пауза</button>
+    <button class="btn" id="nextBtn">Дальше →</button>
+    <span class="counter" id="counter">01 / 36</span>
+    <div class="chapter-tabs">
+      <button class="tab brand" data-jump="1">Бренд</button>
+      <button class="tab blogger" data-jump="14">Блогер</button>
+      <button class="tab team" data-jump="30">Команда</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let idx = 0;
+  let isPlaying = true;
+
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+  const overlay = document.getElementById('overlay');
+  const startBtn = document.getElementById('startBtn');
+  const playBtn = document.getElementById('playBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const tabs = Array.from(document.querySelectorAll('.tab'));
+
+  function show(i) {
+    if (i < 0 || i >= total) return;
+    const prev = slides[idx];
+    const cur = slides[i];
+    if (prev) {
+      const a = prev.querySelector('.audio');
+      if (a) { a.pause(); a.currentTime = 0; }
+      prev.classList.remove('active');
+    }
+    idx = i;
+    cur.classList.add('active');
+    const a = cur.querySelector('.audio');
+    if (a) {
+      a.onended = () => {
+        if (isPlaying && idx < total - 1) show(idx + 1);
+      };
+      if (isPlaying) a.play().catch(() => {});
+    }
+    updateUI();
+  }
+
+  function chapterOf(i) {
+    return slides[i].classList.contains('ch-blogger') ? 'blogger'
+         : slides[i].classList.contains('ch-team') ? 'team'
+         : 'brand';
+  }
+
+  function updateUI() {
+    progress.style.width = ((idx + 1) / total * 100) + '%';
+    counter.textContent =
+      String(idx + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === total - 1;
+    playBtn.textContent = isPlaying ? '❚❚ Пауза' : '▶ Играть';
+    const ch = chapterOf(idx);
+    tabs.forEach(t => t.classList.toggle('active', t.classList.contains(ch)));
+  }
+
+  function togglePlay() {
+    isPlaying = !isPlaying;
+    const a = slides[idx].querySelector('.audio');
+    if (a) {
+      if (isPlaying) a.play().catch(() => {});
+      else a.pause();
+    }
+    updateUI();
+  }
+
+  startBtn.addEventListener('click', () => { overlay.classList.add('hidden'); show(0); });
+  prevBtn.addEventListener('click', () => show(idx - 1));
+  nextBtn.addEventListener('click', () => show(idx + 1));
+  playBtn.addEventListener('click', togglePlay);
+  tabs.forEach(t => {
+    t.addEventListener('click', () => show(parseInt(t.dataset.jump, 10)));
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (overlay.classList.contains('hidden')) {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') show(idx + 1);
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') show(idx - 1);
+      if (e.key === ' ') { e.preventDefault(); togglePlay(); }
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      startBtn.click();
+    }
+  });
+
+  updateUI();
+})();
+</script>
+</body>
+</html>
