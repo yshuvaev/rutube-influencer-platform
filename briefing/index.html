@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<title>Брифинг для инвесторов · RuTube Influencer Platform</title>
+<style>
+:root {
+  --bg: #0A0A0A;
+  --surface: #141414;
+  --surface2: #1A1A1A;
+  --text: #F5F5F5;
+  --text-dim: #B0B0B0;
+  --text-muted: #707070;
+  --accent: #C8FF00;
+  --accent2: #00D9FF;
+  --grn: #4ADE80;
+  --red: #F87171;
+  --amber: #FBBF24;
+  --border: #1F1F1F;
+  --border2: #2A2A2A;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow: hidden;
+}
+.app {
+  position: relative; width: 100vw; height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+/* progress bar */
+.progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--border2); z-index: 10;
+}
+.progress-fill {
+  height: 100%; background: var(--accent);
+  transition: width 0.2s;
+}
+
+/* slides */
+.deck { position: relative; flex: 1; }
+.slide {
+  position: absolute; inset: 0;
+  padding: 64px 80px 110px;
+  display: flex; flex-direction: column;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.slide.active { opacity: 1; pointer-events: auto; }
+
+.page-num {
+  position: absolute; top: 24px; right: 32px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.label {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 18px;
+}
+
+.content { display: flex; flex-direction: column; gap: 24px; max-width: 1200px; }
+
+h1 {
+  font-size: 80px; font-weight: 900; letter-spacing: -0.04em;
+  line-height: 0.92; margin: 0;
+}
+h2 {
+  font-size: 44px; font-weight: 900; letter-spacing: -0.025em;
+  line-height: 1; margin: 0 0 8px;
+}
+
+/* cover */
+.cover { display: flex; flex-direction: column; gap: 32px; max-width: 1200px; }
+.cover-badge {
+  display: inline-block; align-self: flex-start;
+  border: 1px solid var(--accent); color: var(--accent);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 7px 16px;
+}
+.cover h2 {
+  font-size: 22px; font-weight: 600; color: var(--text-dim);
+  letter-spacing: -0.01em; line-height: 1.4;
+}
+.cover-meta {
+  list-style: none; padding: 0; margin: 24px 0 0;
+  display: flex; flex-direction: column; gap: 6px;
+  border-top: 1px solid var(--border); padding-top: 24px;
+}
+.cover-meta li {
+  font-size: 14px; color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+/* bullets */
+.bullets {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.bullets li {
+  display: grid; grid-template-columns: 280px 1fr;
+  gap: 32px; align-items: baseline;
+  padding: 16px 0; border-bottom: 1px solid var(--border);
+  font-size: 17px;
+}
+.bullets li strong {
+  font-size: 17px; font-weight: 800; color: var(--accent);
+  letter-spacing: -0.01em;
+}
+.bullets li span { color: var(--text-dim); line-height: 1.4; }
+
+/* calls */
+.calls {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.calls li {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 18px; background: var(--surface);
+  border: 1px solid var(--border);
+}
+.calls .num {
+  font-size: 28px; font-weight: 900; color: var(--accent);
+  letter-spacing: -0.04em; line-height: 1;
+  flex-shrink: 0; width: 36px;
+}
+.calls strong {
+  display: block; font-size: 16px; font-weight: 800;
+  margin-bottom: 4px;
+}
+.calls em {
+  display: block; font-style: normal;
+  font-size: 14px; color: var(--text-dim); line-height: 1.4;
+}
+
+/* compare table */
+.cmp {
+  width: 100%; border-collapse: collapse; font-size: 16px;
+}
+.cmp th {
+  text-align: left; padding: 14px 16px;
+  font-size: 11px; font-weight: 800;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border2);
+}
+.cmp th:nth-child(2) { color: var(--accent2); }
+.cmp th:nth-child(3) { color: var(--accent); }
+.cmp td {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.cmp .rl { font-weight: 700; color: var(--text); width: 28%; }
+.cmp .yt { color: var(--text-dim); }
+.cmp .rt { color: var(--text); font-weight: 600; }
+
+/* tools grid */
+.tools-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+.tool {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 18px 16px; display: flex; flex-direction: column; gap: 6px;
+}
+.tool strong {
+  font-size: 16px; font-weight: 800; color: var(--accent);
+  letter-spacing: -0.01em;
+}
+.tool span { font-size: 13px; color: var(--text-muted); line-height: 1.3; }
+
+/* metrics */
+.metrics-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+}
+.metric {
+  background: var(--surface); border-left: 3px solid var(--accent);
+  padding: 22px 20px; display: flex; flex-direction: column; gap: 8px;
+}
+.metric strong {
+  font-size: 32px; font-weight: 900; color: var(--accent);
+  letter-spacing: -0.03em; line-height: 1;
+}
+.metric span { font-size: 13px; color: var(--text-dim); line-height: 1.35; }
+
+/* qa */
+.qa {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 18px;
+}
+.qa li {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 20px 24px;
+}
+.qa strong {
+  display: block; font-size: 18px; font-weight: 800;
+  color: var(--accent); margin-bottom: 8px;
+}
+.qa em {
+  display: block; font-style: normal;
+  font-size: 15px; color: var(--text-dim); line-height: 1.5;
+}
+
+/* ask */
+.ask-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+}
+.ask-item {
+  background: var(--surface); border: 1px solid var(--accent);
+  padding: 24px 20px; display: flex; flex-direction: column; gap: 8px;
+}
+.ask-item strong {
+  font-size: 28px; font-weight: 900; color: var(--accent);
+  letter-spacing: -0.03em; line-height: 1;
+}
+.ask-item span { font-size: 13px; color: var(--text-dim); line-height: 1.35; }
+
+/* controls */
+.controls {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: 72px; background: rgba(10, 10, 10, 0.95);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  gap: 32px; z-index: 5;
+  backdrop-filter: blur(12px);
+}
+.btn {
+  background: transparent; border: 1px solid var(--border2);
+  color: var(--text); padding: 10px 18px;
+  font-family: inherit; font-size: 13px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.15s;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn.primary {
+  background: var(--accent); color: var(--bg);
+  border-color: var(--accent);
+}
+.btn.primary:hover { background: var(--text); border-color: var(--text); }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+/* start overlay */
+.overlay {
+  position: fixed; inset: 0; background: rgba(10, 10, 10, 0.96);
+  z-index: 100; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-direction: column; gap: 32px;
+  backdrop-filter: blur(8px);
+}
+.overlay.hidden { display: none; }
+.overlay-title {
+  font-size: 36px; font-weight: 900; letter-spacing: -0.02em;
+  color: var(--text); max-width: 720px; text-align: center;
+  line-height: 1.1;
+}
+.overlay-sub {
+  font-size: 16px; color: var(--text-dim); max-width: 640px; text-align: center;
+  line-height: 1.5;
+}
+.overlay-btn {
+  background: var(--accent); color: var(--bg);
+  border: none; padding: 18px 36px;
+  font-family: inherit; font-size: 14px; font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .slide { padding: 32px 24px 100px; }
+  h1 { font-size: 48px; }
+  h2 { font-size: 28px; }
+  .calls, .tools-grid, .metrics-grid, .ask-grid {
+    grid-template-columns: 1fr;
+  }
+  .bullets li { grid-template-columns: 1fr; gap: 4px; }
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay">
+  <div class="overlay-title">Брифинг для инвесторов</div>
+  <div class="overlay-sub">11 слайдов с закадровой озвучкой, ~9 минут.<br>Слайды переключаются автоматически. Управление — пробел и стрелки ←→.</div>
+  <button class="overlay-btn" id="startBtn">Начать ▶</button>
+</div>
+
+<div class="progress"><div class="progress-fill" id="progress"></div></div>
+
+<div class="app">
+  <div class="deck" id="deck">
+    
+    <section class="slide" data-idx="0">
+      <div class="page-num">1 / 11</div>
+      
+        <div class="cover">
+          <div class="cover-badge">Брифинг для инвесторов</div>
+          <h1>10 минут до запуска</h1>
+          <h2>Что мы делаем после получения денег</h2>
+          <ul class="cover-meta">
+            <li>Брифинг для инвесторов</li><li>Технический план первых 7 дней пилота</li>
+          </ul>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-01.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="1">
+      <div class="page-num">2 / 11</div>
+      <div class="content"><div class="label">День 1</div><h2>Юридическая и финансовая инфраструктура</h2><ul class="bullets"><li><strong>Юр. лицо</strong><span>ООО или ИП через Тинькофф Бизнес-Старт онлайн, 1 день</span></li><li><strong>Расчётный счёт</strong><span>В том же Тинькофф / Точка / Бланк, активация — те же 24 часа</span></li><li><strong>Платежи брендов</strong><span>ЮKassa: эквайринг для приёма оплат от брендов</span></li><li><strong>Выплаты блогерам</strong><span>Тинькофф Самозанятые API — автоматические выплаты + чеки</span></li><li><strong>Документооборот</strong><span>Контур.Диадок: УПД, акты, счета-фактуры между всеми сторонами</span></li></ul></div>
+      <audio class="audio" preload="auto" src="audio/slide-02.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="2">
+      <div class="page-num">3 / 11</div>
+      <div class="content"><div class="label">День 2-3</div><h2>SaaS-стэк для команды</h2><ul class="bullets"><li><strong>CRM</strong><span>amoCRM — две воронки: «Бренды» и «Блогеры»</span></li><li><strong>Email outreach</strong><span>SendPulse + Mailwarm для прогрева доменов под холодные рассылки</span></li><li><strong>Звонки</strong><span>Sipuni — IP-телефония с записью разговоров и интеграцией в amoCRM</span></li><li><strong>Лендинг и формы</strong><span>Tilda Pro — две страницы: для брендов и для блогеров</span></li><li><strong>Чат-бот квалификации</strong><span>Salebot — отсев нерелевантных лидов до прозвона</span></li><li><strong>Аналитика</strong><span>Yandex Metrica + Google Sheets для еженедельных дашбордов</span></li></ul></div>
+      <audio class="audio" preload="auto" src="audio/slide-03.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="3">
+      <div class="page-num">4 / 11</div>
+      <div class="content"><div class="label">День 4-5</div><h2>Инфраструктура на стороне RuTube</h2><ul class="bullets"><li><strong>Партнёрский кабинет</strong><span>Запрос доступа к RuTube Творческая Студия Pro для аналитики</span></li><li><strong>Парсинг публичных метрик</strong><span>Python + BeautifulSoup + Selenium: подписчики, ER, средний просмотр</span></li><li><strong>База блогеров</strong><span>Скоринг 500 каналов RuTube по нашему ICP, отбор 30 для базы</span></li><li><strong>UTM-трекинг</strong><span>Конструктор UTM в формате utm_source=rutube_<channel_id>_<promo></span></li><li><strong>Промокоды</strong><span>Интеграция с CMS брендов (1C-Bitrix, InSales, Tilda Magazin)</span></li><li><strong>Атрибуция</strong><span>Pixel-tracker на лендинге + сверка с базой промокодов в CRM</span></li></ul></div>
+      <audio class="audio" preload="auto" src="audio/slide-04.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="4">
+      <div class="page-num">5 / 11</div>
+      <div class="content"><div class="label">День 6-7</div><h2>Запуск outbound к 50 брендам</h2><ul class="bullets"><li><strong>ICP брендов</strong><span>E-commerce и FMCG, средний чек 1-15 тыс. руб., рекламный бюджет 500K+</span></li><li><strong>База контактов</strong><span>Парсинг ЕГРЮЛ + LinkedIn Sales Navigator + ручной обзвон reception</span></li><li><strong>Cold email</strong><span>Двухступенчатая последовательность: бриф + кейс с UTM-данными</span></li><li><strong>Cold call</strong><span>После прогрева email — звонок маркетинг-директору</span></li><li><strong>Demo на лендинге</strong><span>Показываем интерфейс CRM + три кейса с реальными промокод-метриками</span></li><li><strong>Цель недели</strong><span>5 встреч из 50 брендов = 10% Conv, минимальная для перехода в месяц 2</span></li></ul></div>
+      <audio class="audio" preload="auto" src="audio/slide-05.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="5">
+      <div class="page-num">6 / 11</div>
+      <div class="content"><div class="label">Кому звонить</div><h2>Шесть ключевых звонков в первый день</h2><ul class="calls"><li><span class="num">1</span><div><strong>Партнёрский отдел RuTube</strong><em>Запрос доступа в Творческую Студию Pro и API</em></div></li><li><span class="num">2</span><div><strong>Юрист</strong><em>Структура договора маркетплейса с самозанятыми и ИП</em></div></li><li><span class="num">3</span><div><strong>Бухгалтер</strong><em>НДС-схема, документооборот через Диадок</em></div></li><li><span class="num">4</span><div><strong>Тинькофф Бизнес</strong><em>API-доступ к Самозанятым для автоматических выплат</em></div></li><li><span class="num">5</span><div><strong>Первые 5 теплых брендов</strong><em>Из личной сети — пилот без outbound-затрат</em></div></li><li><span class="num">6</span><div><strong>ContextAd / Aitarget</strong><em>Performance-агентства брендов — узнать, как они тратят бюджет на интеграции</em></div></li></ul></div>
+      <audio class="audio" preload="auto" src="audio/slide-06.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="6">
+      <div class="page-num">7 / 11</div>
+      <div class="content"><div class="label">RuTube vs YouTube</div><h2>Чем это отличается от того, что есть</h2>
+        <table class="cmp">
+          <thead><tr><th></th><th>YouTube — есть</th><th>RuTube — нет</th></tr></thead>
+          <tbody><tr><td class="rl">Маркетплейс интеграций</td><td class="yt">YouTube BrandConnect (нативный)</td><td class="rt">Нет ничего</td></tr><tr><td class="rl">Доступ к метрикам блогеров</td><td class="yt">YouTube Data API</td><td class="rt">Только публичные страницы + парсинг</td></tr><tr><td class="rl">Расчёты с блогерами</td><td class="yt">AdSense / Stripe Connect</td><td class="rt">Ручные через ЮKassa + Самозанятые</td></tr><tr><td class="rl">Атрибуция продаж</td><td class="yt">TrueView в Google Ads</td><td class="rt">Только UTM + промокоды на стороне бренда</td></tr><tr><td class="rl">Брифы и техзадания</td><td class="yt">Стандартизованы внутри платформы</td><td class="rt">Делаются вручную, нет шаблонов</td></tr><tr><td class="rl">Подбор по ICP</td><td class="yt">Алгоритм YouTube</td><td class="rt">Наш собственный скоринг по парсингу</td></tr></tbody>
+        </table></div>
+      <audio class="audio" preload="auto" src="audio/slide-07.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="7">
+      <div class="page-num">8 / 11</div>
+      <div class="content"><div class="label">Технический стек</div><h2>Десять инструментов, которые ставим</h2><div class="tools-grid"><div class="tool"><strong>amoCRM</strong><span>ядро воронок</span></div><div class="tool"><strong>SendPulse + Mailwarm</strong><span>outreach</span></div><div class="tool"><strong>Sipuni</strong><span>IP-телефония</span></div><div class="tool"><strong>Tilda Pro</strong><span>лендинги</span></div><div class="tool"><strong>Salebot</strong><span>квалификация</span></div><div class="tool"><strong>Yandex Metrica</strong><span>аналитика</span></div><div class="tool"><strong>Контур.Диадок</strong><span>ЭДО</span></div><div class="tool"><strong>ЮKassa</strong><span>приём платежей</span></div><div class="tool"><strong>Тинькофф Самозанятые</strong><span>выплаты блогерам</span></div><div class="tool"><strong>Python parser</strong><span>сбор метрик с RuTube</span></div></div></div>
+      <audio class="audio" preload="auto" src="audio/slide-08.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="8">
+      <div class="page-num">9 / 11</div>
+      <div class="content"><div class="label">Окно возможностей</div><h2>Почему именно сейчас и почему мы</h2><div class="metrics-grid"><div class="metric"><strong>12-18 месяцев</strong><span>Пока RuTube не сделает свой BrandConnect</span></div><div class="metric"><strong>85 млн MAU</strong><span>База RuTube декабрь 2025, +20% прогноз 2026</span></div><div class="metric"><strong>+128% YoY</strong><span>Рост рекламы у блогеров RuTube 2024→2025</span></div><div class="metric"><strong>11,6 млрд ₽</strong><span>Перетекают из заблокированного Instagram в 2025-2026</span></div><div class="metric"><strong>0 конкурентов</strong><span>Прямого маркетплейса для RuTube — нет</span></div></div></div>
+      <audio class="audio" preload="auto" src="audio/slide-09.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="9">
+      <div class="page-num">10 / 11</div>
+      <div class="content"><div class="label">Вопросы инвестору</div><h2>Три вопроса, на которые я готов ответить</h2><ul class="qa"><li><strong>Что будет, если RuTube закроет API/доступ к парсингу?</strong><em>Парсинг — публичных страниц, не нарушает ToS. Если закроют — переходим на партнёрское соглашение через RuTube Творческая Студия Pro.</em></li><li><strong>Как защищаемся от появления YouTube BrandConnect-аналога на RuTube?</strong><em>База в 200 брендов и 30K блогеров с историей сделок — не воспроизводится за 6 месяцев. Network effect + retention данные = moat.</em></li><li><strong>Куда уйдёт 30 процентов денег пилота при stop-сценарии?</strong><em>Возврат через продажу артефактов: outbound-база 50 брендов с заметками + база блогеров с скорингом + бренд-методология атрибуции.</em></li></ul></div>
+      <audio class="audio" preload="auto" src="audio/slide-10.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="10">
+      <div class="page-num">11 / 11</div>
+      <div class="content"><div class="label">Что нужно</div><h2>Решение на сегодня</h2><div class="ask-grid"><div class="ask-item"><strong>2 500 000 ₽</strong><span>Бюджет пилота</span></div><div class="ask-item"><strong>4 месяца</strong><span>С 1 июня по 30 сентября 2026</span></div><div class="ask-item"><strong>3 метрики</strong><span>Conv лид≥30% / ROMI≥50% / Repeat≥50%</span></div><div class="ask-item"><strong>Решение</strong><span>В последнюю неделю сентября — Go / Fix / Stop по матрице</span></div></div></div>
+      <audio class="audio" preload="auto" src="audio/slide-11.mp3"></audio>
+    </section>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="prevBtn">← Назад</button>
+    <button class="btn primary" id="playBtn">▶ Пауза</button>
+    <button class="btn" id="nextBtn">Дальше →</button>
+    <span class="counter" id="counter">01 / 12</span>
+  </div>
+</div>
+
+<script>
+(function() {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let idx = 0;
+  let isPlaying = true;
+
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+  const overlay = document.getElementById('overlay');
+  const startBtn = document.getElementById('startBtn');
+  const playBtn = document.getElementById('playBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  function show(i) {
+    if (i < 0 || i >= total) return;
+    const prev = slides[idx];
+    const cur = slides[i];
+    if (prev) {
+      const a = prev.querySelector('.audio');
+      if (a) { a.pause(); a.currentTime = 0; }
+      prev.classList.remove('active');
+    }
+    idx = i;
+    cur.classList.add('active');
+    const a = cur.querySelector('.audio');
+    if (a) {
+      a.onended = () => {
+        if (isPlaying && idx < total - 1) show(idx + 1);
+      };
+      if (isPlaying) a.play().catch(() => { /* user gesture required */ });
+    }
+    updateUI();
+  }
+
+  function updateUI() {
+    progress.style.width = ((idx + 1) / total * 100) + '%';
+    counter.textContent =
+      String(idx + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === total - 1;
+    playBtn.textContent = isPlaying ? '❚❚ Пауза' : '▶ Играть';
+  }
+
+  function togglePlay() {
+    isPlaying = !isPlaying;
+    const a = slides[idx].querySelector('.audio');
+    if (a) {
+      if (isPlaying) a.play().catch(() => {});
+      else a.pause();
+    }
+    updateUI();
+  }
+
+  startBtn.addEventListener('click', () => {
+    overlay.classList.add('hidden');
+    show(0);
+  });
+  prevBtn.addEventListener('click', () => show(idx - 1));
+  nextBtn.addEventListener('click', () => show(idx + 1));
+  playBtn.addEventListener('click', togglePlay);
+
+  document.addEventListener('keydown', (e) => {
+    if (overlay.classList.contains('hidden')) {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') show(idx + 1);
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') show(idx - 1);
+      if (e.key === ' ') { e.preventDefault(); togglePlay(); }
+      if (e.key === 'Escape') {
+        const a = slides[idx].querySelector('.audio');
+        if (a) { a.pause(); a.currentTime = 0; }
+        isPlaying = false; updateUI();
+      }
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      startBtn.click();
+    }
+  });
+
+  updateUI();
+})();
+</script>
+</body>
+</html>
