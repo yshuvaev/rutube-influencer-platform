@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RuTube Influencer Platform — Инвестиционный документ</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -25,125 +25,142 @@
   --border2: #2A2A2A;
 }
 
-html { scroll-behavior: smooth; }
-body {
+@page { size: 297mm 167mm; margin: 0; }
+
+html, body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg);
   color: var(--text);
-  overflow-x: hidden;
 }
 
-/* Nav dots */
-.nav-dots {
-  position: fixed; right: 24px; top: 50%;
-  transform: translateY(-50%);
-  display: flex; flex-direction: column; gap: 9px;
-  z-index: 200;
+@media screen {
+  body {
+    background: #1a1a1a;
+    padding: 24px 0;
+    min-height: 100vh;
+  }
+  .deck {
+    display: flex; flex-direction: column;
+    gap: 24px; align-items: center;
+  }
+  .slide {
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+    border: 1px solid #2a2a2a;
+  }
 }
-.nav-dot {
-  width: 5px; height: 5px; border-radius: 50%;
-  background: var(--text-muted); cursor: pointer; transition: all 0.25s;
-}
-.nav-dot.active { background: var(--accent); transform: scale(1.8); }
 
-/* Slide base */
+@media print {
+  body { background: var(--bg); padding: 0; }
+  .deck { gap: 0; }
+  .slide { page-break-after: always; box-shadow: none; border: none; }
+  .slide:last-child { page-break-after: auto; }
+}
+
+/* ── SLIDE BASE — fixed 16:9 (297×167mm) ── */
 .slide {
-  min-height: 100vh;
-  padding: 60px 80px;
-  display: flex; flex-direction: column;
-  border-bottom: 1px solid var(--border);
+  width: 297mm;
+  height: 167mm;
+  padding: 12mm 16mm;
+  background: var(--bg);
   position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-size: 10pt;
 }
-.slide-index {
-  font-size: 10px; font-weight: 700;
+
+.slide-num {
+  position: absolute;
+  top: 12mm; right: 16mm;
+  font-size: 8pt; font-weight: 700;
   letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--text-muted); margin-bottom: 36px;
+  color: var(--text-muted);
 }
-.slide-index .num { color: var(--accent); }
+.slide-num .acc { color: var(--accent); }
+
 .section-label {
-  font-size: 10px; font-weight: 700;
+  font-size: 8pt; font-weight: 700;
   letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--accent); margin-bottom: 12px;
+  color: var(--accent); margin-bottom: 4mm;
 }
+
 .section-title {
-  font-size: clamp(32px, 4.6vw, 56px);
-  font-weight: 900; letter-spacing: -0.025em;
-  line-height: 0.95; margin-bottom: 40px;
+  font-size: 26pt; font-weight: 900;
+  letter-spacing: -0.025em; line-height: 0.95;
+  margin-bottom: 6mm;
 }
+
 .slide-footer {
-  margin-top: auto; padding-top: 24px;
-  border-top: 1px solid var(--border);
+  position: absolute;
+  left: 16mm; right: 16mm; bottom: 8mm;
   display: flex; justify-content: space-between; align-items: center;
-  font-size: 11px; color: var(--text-muted); gap: 24px;
+  padding-top: 4mm;
+  border-top: 1px solid var(--border);
+  font-size: 8pt; color: var(--text-muted); gap: 12mm;
 }
 .slide-footer strong { color: var(--text-dim); }
 .budget-tag {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 13px; font-weight: 700;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 9pt; font-weight: 700;
   border: 1px solid var(--accent);
-  padding: 8px 14px; color: var(--accent);
+  padding: 4px 10px; color: var(--accent);
   white-space: nowrap;
 }
 .budget-tag::before {
-  content: ''; width: 6px; height: 6px; border-radius: 50%;
-  background: var(--accent);
+  content: ''; width: 5px; height: 5px;
+  border-radius: 50%; background: var(--accent);
 }
 
-/* Cover */
-#s1 { justify-content: space-between; padding: 72px 80px; }
+/* ── COVER ── */
+#s1 { padding: 16mm 18mm; justify-content: space-between; }
 .cover-badge {
   display: inline-flex; align-items: center; gap: 8px;
   border: 1px solid var(--accent); color: var(--accent);
-  font-size: 10px; font-weight: 700;
+  font-size: 8pt; font-weight: 700;
   letter-spacing: 0.14em; text-transform: uppercase;
-  padding: 7px 16px; margin-bottom: 56px; width: fit-content;
+  padding: 5px 12px; width: fit-content;
 }
 .cover-badge::before {
-  content: ''; width: 6px; height: 6px; border-radius: 50%;
-  background: var(--accent); animation: pulse 2s ease infinite;
+  content: ''; width: 5px; height: 5px;
+  border-radius: 50%; background: var(--accent);
 }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 .cover-h1 {
-  font-size: clamp(48px, 7.5vw, 110px);
-  font-weight: 900; letter-spacing: -0.04em;
-  line-height: 0.88; max-width: 1100px;
+  font-size: 64pt; font-weight: 900;
+  letter-spacing: -0.04em; line-height: 0.88;
+  margin-top: 12mm;
 }
 .cover-h1 .em { color: var(--accent); }
 .cover-sub {
-  margin-top: 24px; font-size: 16px;
-  color: var(--text-dim); max-width: 600px; line-height: 1.6;
+  margin-top: 6mm; font-size: 11pt;
+  color: var(--text-dim); max-width: 180mm; line-height: 1.55;
 }
 .cover-meta {
-  display: flex; gap: 56px; flex-wrap: wrap;
-  padding-top: 40px; border-top: 1px solid var(--border);
-  margin-top: auto;
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 8mm;
+  padding-top: 6mm;
+  border-top: 1px solid var(--border);
 }
-.cm-item { display: flex; flex-direction: column; gap: 4px; }
+.cm-item { display: flex; flex-direction: column; gap: 1mm; }
 .cm-label {
-  font-size: 10px; font-weight: 600;
+  font-size: 7pt; font-weight: 600;
   letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--text-muted);
 }
-.cm-val { font-size: 15px; font-weight: 700; }
+.cm-val { font-size: 11pt; font-weight: 700; }
 
-/* Two-col layout */
-.two-col {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 40px; align-items: start;
-}
+/* ── COMMON PRIMITIVES ── */
 .col-head {
-  font-size: 10px; font-weight: 700;
+  font-size: 7pt; font-weight: 700;
   letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--text-muted); margin-bottom: 18px;
-  padding-bottom: 12px; border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+  margin-bottom: 3mm;
+  padding-bottom: 2mm;
+  border-bottom: 1px solid var(--border);
 }
-
-/* KV list */
 .kv-list { display: flex; flex-direction: column; }
 .kv-row {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 12px 0; border-bottom: 1px solid var(--border);
-  font-size: 14px; gap: 20px;
+  padding: 2mm 0; border-bottom: 1px solid var(--border);
+  font-size: 9pt; gap: 6mm;
 }
 .kv-row:last-child { border-bottom: none; }
 .kv-key { color: var(--text-dim); flex: 1; }
@@ -152,146 +169,154 @@ body {
 .kv-val.acc2 { color: var(--accent2); }
 .kv-val.grn { color: var(--grn); }
 .kv-val.red { color: var(--red); }
+.two-col {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10mm; align-items: start;
+}
+.body-area {
+  flex: 1;
+  min-height: 0;
+  padding-bottom: 14mm; /* room for footer */
+}
 
-/* Stats grid */
+/* Stats grid (cover-meta-style 4 cells) */
 .stats-grid {
   display: grid; grid-template-columns: repeat(4, 1fr);
   gap: 1px; background: var(--border2);
-  border: 1px solid var(--border2); margin-bottom: 36px;
+  border: 1px solid var(--border2);
 }
 .stat-cell {
-  background: var(--surface); padding: 28px 24px;
-  display: flex; flex-direction: column; gap: 6px;
+  background: var(--surface); padding: 4mm 4mm;
+  display: flex; flex-direction: column; gap: 1.5mm;
 }
 .stat-v {
-  font-size: clamp(26px, 3.2vw, 44px);
-  font-weight: 900; letter-spacing: -0.025em; line-height: 1;
+  font-size: 22pt; font-weight: 900;
+  letter-spacing: -0.025em; line-height: 1;
 }
 .stat-v.acc { color: var(--accent); }
 .stat-v.acc2 { color: var(--accent2); }
 .stat-v.grn { color: var(--grn); }
 .stat-v.amb { color: var(--amber); }
-.stat-l { font-size: 12px; color: var(--text-dim); line-height: 1.4; }
-.stat-s { font-size: 10px; color: var(--text-muted); margin-top: 6px; }
+.stat-l { font-size: 9pt; color: var(--text-dim); line-height: 1.35; }
+.stat-s { font-size: 7.5pt; color: var(--text-muted); margin-top: auto; }
 
-/* Slide 2 — описание проекта */
-.project-grid {
-  display: grid; grid-template-columns: 1.2fr 1fr;
-  gap: 48px; align-items: stretch;
+/* ── SLIDE 2: project ── */
+.proj-grid {
+  display: grid; grid-template-columns: 1.15fr 1fr;
+  gap: 6mm;
 }
 .proj-block {
   background: var(--surface); border: 1px solid var(--border2);
-  padding: 28px;
+  padding: 5mm;
 }
 .proj-block-title {
-  font-size: 11px; font-weight: 800;
+  font-size: 8pt; font-weight: 800;
   letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--accent); margin-bottom: 14px;
+  color: var(--accent); margin-bottom: 3mm;
 }
 .proj-block-text {
-  font-size: 14px; line-height: 1.65; color: var(--text-dim);
+  font-size: 9.5pt; line-height: 1.5; color: var(--text-dim);
 }
 .proj-block-text strong { color: var(--text); font-weight: 700; }
 .value-flow {
   display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 4px;
+  gap: 1mm; margin-top: 6mm;
 }
 .vf-node {
   background: var(--surface2); border: 1px solid var(--border2);
-  padding: 18px 14px; text-align: center;
+  padding: 4mm 3mm; text-align: center;
 }
 .vf-node.center { border-color: var(--accent); }
 .vf-role {
-  font-size: 9px; font-weight: 700;
+  font-size: 7pt; font-weight: 700;
   letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--text-muted); margin-bottom: 6px;
+  color: var(--text-muted); margin-bottom: 2mm;
 }
-.vf-name { font-size: 14px; font-weight: 800; }
+.vf-name { font-size: 10pt; font-weight: 800; }
+.vf-node.center .vf-name { color: var(--accent); }
 
-/* Slide 3 — рынок */
+/* ── SLIDE 3: market ── */
 .tldr-strip {
   background: var(--surface); border-left: 3px solid var(--accent);
-  padding: 18px 24px; margin-bottom: 36px;
-  font-size: 14px; color: var(--text-dim); line-height: 1.6;
+  padding: 4mm 5mm; margin-bottom: 5mm;
+  font-size: 9.5pt; color: var(--text-dim); line-height: 1.5;
 }
 .tldr-strip strong { color: var(--text); }
 
-/* PNL chart */
+/* ── SLIDE 4: P&L ── */
 .pnl-wrap {
   background: var(--surface); border: 1px solid var(--border2);
-  padding: 32px 36px; margin-bottom: 24px;
+  padding: 5mm 6mm;
 }
 .pnl-axis-y {
   display: flex; justify-content: space-between;
-  font-size: 10px; color: var(--text-muted);
-  margin-bottom: 8px;
+  font-size: 7pt; color: var(--text-muted);
+  margin-bottom: 1mm;
 }
 .pnl-chart {
-  display: grid; grid-template-columns: repeat(36, 1fr);
-  gap: 2px; align-items: end;
-  height: 220px; border-bottom: 1px solid var(--border2);
+  display: flex;
+  height: 35mm;
+  border-bottom: 1px solid var(--border2);
   position: relative;
 }
 .pnl-zero {
   position: absolute; left: 0; right: 0; top: 50%;
-  height: 1px; background: var(--border2);
+  height: 1px;
   border-top: 1px dashed #333;
 }
 .pnl-bar {
-  position: relative;
+  position: absolute;
   border-radius: 1px 1px 0 0;
-  min-height: 2px;
-  transition: opacity 0.2s;
 }
 .pnl-bar.neg { background: #5a1a1a; }
 .pnl-bar.pos { background: #2d4a1a; }
 .pnl-bar.pos.high { background: var(--grn); }
-.pnl-bar:hover { opacity: 0.8; }
 .pnl-axis-x {
   display: flex; justify-content: space-between;
-  font-size: 10px; color: var(--text-muted); margin-top: 8px;
+  font-size: 7pt; color: var(--text-muted); margin-top: 1mm;
 }
 .pnl-markers {
-  display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 16px; margin-top: 24px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 3mm; margin-top: 5mm;
 }
 .pnl-mk {
-  background: var(--surface2); padding: 16px;
+  background: var(--surface2); padding: 3mm 4mm;
   border-left: 2px solid var(--accent);
 }
 .pnl-mk-month {
-  font-size: 10px; font-weight: 700;
+  font-size: 7pt; font-weight: 700;
   letter-spacing: 0.1em; color: var(--text-muted);
-  margin-bottom: 4px;
+  margin-bottom: 1mm;
 }
 .pnl-mk-val {
-  font-size: 22px; font-weight: 900;
+  font-size: 14pt; font-weight: 900;
   letter-spacing: -0.02em; color: var(--accent); line-height: 1.1;
 }
-.pnl-mk-label { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+.pnl-mk-label { font-size: 8pt; color: var(--text-dim); margin-top: 1mm; }
 
-/* Investor slide */
+/* ── SLIDE 5: investor ── */
 .inv-grid {
   display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 16px; margin-bottom: 24px;
+  gap: 3mm;
 }
 .inv-card {
   background: var(--surface); border: 1px solid var(--border2);
-  padding: 24px;
+  padding: 4mm 5mm;
 }
 .inv-card.hi { border-color: var(--accent); }
 .inv-card-label {
-  font-size: 10px; font-weight: 700;
+  font-size: 7pt; font-weight: 700;
   letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--text-muted); margin-bottom: 8px;
+  color: var(--text-muted); margin-bottom: 2mm;
 }
 .inv-card-val {
-  font-size: clamp(26px, 3.2vw, 42px);
-  font-weight: 900; letter-spacing: -0.025em;
-  line-height: 1; color: var(--accent);
+  font-size: 22pt; font-weight: 900;
+  letter-spacing: -0.025em; line-height: 1;
+  color: var(--accent);
 }
 .inv-card-sub {
-  font-size: 12px; color: var(--text-dim); margin-top: 8px;
+  font-size: 8pt; color: var(--text-dim); margin-top: 2mm;
+  line-height: 1.4;
 }
 .ebitda-row {
   display: grid; grid-template-columns: repeat(3, 1fr);
@@ -299,44 +324,43 @@ body {
   border: 1px solid var(--border2);
 }
 .ebitda-cell {
-  background: var(--surface2); padding: 22px;
+  background: var(--surface2); padding: 4mm 5mm;
   display: flex; justify-content: space-between; align-items: center;
 }
 .ebitda-month {
-  font-size: 11px; font-weight: 700;
+  font-size: 8pt; font-weight: 700;
   letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--text-muted);
 }
 .ebitda-val {
-  font-size: 22px; font-weight: 900;
+  font-size: 13pt; font-weight: 900;
   color: var(--grn); letter-spacing: -0.02em;
+  white-space: nowrap;
 }
 
-/* Pilot slide */
+/* ── SLIDE 6: pilot ── */
 .pilot-hero {
   display: grid; grid-template-columns: 1.1fr 1fr;
-  gap: 40px; margin-bottom: 32px;
+  gap: 8mm;
 }
 .pilot-quote {
-  font-size: clamp(20px, 2.4vw, 30px);
-  font-weight: 700; letter-spacing: -0.02em;
-  line-height: 1.3; color: var(--text);
+  font-size: 16pt; font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1.3;
 }
 .pilot-quote .em { color: var(--accent); }
 
-/* Decision matrix 3x3 */
-.matrix-wrap { margin-bottom: 24px; }
+/* ── SLIDE 7: matrix ── */
 .matrix-table {
   width: 100%; border-collapse: collapse;
 }
 .matrix-table th, .matrix-table td {
-  padding: 18px 20px; text-align: center;
+  padding: 4mm 4mm; text-align: center;
   border: 1px solid var(--border2);
   vertical-align: middle;
 }
 .matrix-table thead th {
   background: var(--surface2);
-  font-size: 11px; font-weight: 800;
+  font-size: 8pt; font-weight: 800;
   letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--text-muted);
 }
@@ -345,96 +369,85 @@ body {
 .matrix-table thead th.col-stop { color: var(--red); border-bottom: 2px solid var(--red); }
 .matrix-table tbody th {
   background: var(--surface);
-  text-align: left; font-size: 13px; font-weight: 700;
+  text-align: left; font-size: 9.5pt; font-weight: 700;
   color: var(--text); width: 28%;
 }
-.matrix-cell {
-  font-size: 16px; font-weight: 800;
-  background: var(--surface);
-}
-.matrix-cell .sign {
-  font-size: 12px; color: var(--text-muted);
-  font-weight: 600; margin-right: 4px;
-}
+.matrix-cell { font-size: 12pt; font-weight: 800; background: var(--surface); }
+.matrix-cell .sign { font-size: 9pt; color: var(--text-muted); font-weight: 600; margin-right: 2px; }
 .matrix-cell .why {
-  display: block; font-size: 11px; font-weight: 400;
-  color: var(--text-muted); margin-top: 6px; line-height: 1.4;
+  display: block; font-size: 8pt; font-weight: 400;
+  color: var(--text-muted); margin-top: 2mm; line-height: 1.4;
 }
 .matrix-cell.go { background: rgba(74, 222, 128, 0.08); color: var(--grn); }
 .matrix-cell.fix { background: rgba(251, 191, 36, 0.08); color: var(--amber); }
 .matrix-cell.stop { background: rgba(248, 113, 113, 0.08); color: var(--red); }
 
-/* Gantt */
-.gantt-wrap { margin-bottom: 24px; }
+/* ── SLIDE 8: gantt ── */
 .gantt-table {
   width: 100%; border-collapse: collapse;
-  font-size: 13px;
+  font-size: 9pt;
 }
 .gantt-table th {
-  font-size: 10px; font-weight: 700;
+  font-size: 7pt; font-weight: 700;
   letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--text-muted);
-  padding: 10px 12px; text-align: center;
+  padding: 2mm 3mm; text-align: center;
   border-bottom: 1px solid var(--border2);
 }
-.gantt-table th.epic-col { text-align: left; width: 30%; }
+.gantt-table th.epic-col { text-align: left; width: 32%; }
 .gantt-table td {
-  padding: 12px; border-bottom: 1px solid var(--border);
+  padding: 1.6mm 3mm; border-bottom: 1px solid var(--border);
   vertical-align: middle;
 }
 .gantt-table td.epic-name {
-  font-weight: 600; color: var(--text);
+  font-weight: 600; color: var(--text); font-size: 9pt;
 }
 .gantt-table td.epic-name .epic-sub {
-  display: block; font-size: 11px; color: var(--text-muted);
-  font-weight: 400; margin-top: 3px;
+  display: block; font-size: 7.5pt; color: var(--text-muted);
+  font-weight: 400; margin-top: 0.5mm;
 }
 .gantt-cell {
-  position: relative;
-  height: 30px;
-  text-align: center;
+  position: relative; height: 5mm; text-align: center;
 }
 .gantt-bar {
   position: absolute; top: 50%; transform: translateY(-50%);
-  height: 22px; background: var(--accent);
-  border-radius: 3px;
+  height: 3.5mm; background: var(--accent);
+  border-radius: 1mm;
   display: flex; align-items: center; justify-content: center;
-  font-size: 10px; font-weight: 700; color: #0A0A0A;
-  letter-spacing: 0.05em;
+  font-size: 6.5pt; font-weight: 700; color: #0A0A0A;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
 }
-.gantt-bar.outline {
-  background: transparent; border: 1px solid var(--accent2);
-  color: var(--accent2);
-}
-.gantt-bar.checkpoint {
-  background: var(--amber); color: #0A0A0A;
-}
+.gantt-bar.outline { background: transparent; border: 1px solid var(--accent2); color: var(--accent2); }
+.gantt-bar.checkpoint { background: var(--amber); color: #0A0A0A; }
 
-/* Budget */
+/* ── SLIDE 9: budget ── */
 .budget-grid {
-  display: grid; grid-template-columns: 2fr 1fr;
-  gap: 32px;
+  display: grid; grid-template-columns: 1.85fr 1fr;
+  gap: 5mm;
 }
 .budget-table {
-  width: 100%; border-collapse: collapse; font-size: 13px;
+  width: 100%; border-collapse: collapse; font-size: 8pt;
 }
 .budget-table th {
-  font-size: 10px; font-weight: 700;
+  font-size: 6.5pt; font-weight: 700;
   letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--text-muted); padding: 10px 12px;
+  color: var(--text-muted); padding: 1mm 3mm;
   text-align: left; border-bottom: 1px solid var(--border2);
 }
 .budget-table th.num { text-align: right; }
 .budget-table td {
-  padding: 12px; border-bottom: 1px solid var(--border);
-  vertical-align: middle; font-size: 13px;
+  padding: 0.7mm 3mm; border-bottom: 1px solid var(--border);
+  vertical-align: middle; font-size: 7.5pt;
+  line-height: 1.15;
 }
 .budget-table td.num { text-align: right; font-weight: 700; }
 .budget-table tr.cat td {
   background: var(--surface2);
-  font-weight: 800; font-size: 11px;
+  font-weight: 800; font-size: 6pt;
   letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--accent);
+  padding: 1mm 3mm;
 }
 .budget-table tr.subtotal td {
   border-top: 1px solid var(--border2);
@@ -443,111 +456,97 @@ body {
 .budget-table tr.total td {
   border-top: 2px solid var(--accent);
   border-bottom: 2px solid var(--accent);
-  font-size: 15px; font-weight: 900;
+  font-size: 9.5pt; font-weight: 900;
   color: var(--accent);
   letter-spacing: -0.02em;
+  padding: 1.6mm 3mm;
 }
 .budget-summary {
   background: var(--surface); border: 1px solid var(--accent);
-  padding: 28px;
-  display: flex; flex-direction: column; gap: 16px;
+  padding: 5mm;
+  display: flex; flex-direction: column; gap: 3mm;
   align-self: start;
 }
 .budget-summary-title {
-  font-size: 10px; font-weight: 700;
+  font-size: 7pt; font-weight: 700;
   letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--accent);
 }
 .budget-summary-val {
-  font-size: clamp(36px, 4vw, 56px);
-  font-weight: 900; letter-spacing: -0.03em;
-  line-height: 1; color: var(--accent);
+  font-size: 32pt; font-weight: 900;
+  letter-spacing: -0.03em; line-height: 1;
+  color: var(--accent);
 }
 .budget-summary-meta {
-  display: flex; flex-direction: column; gap: 8px;
-  font-size: 13px; color: var(--text-dim);
-  padding-top: 16px; border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 2mm;
+  font-size: 9pt; color: var(--text-dim);
+  padding-top: 3mm; border-top: 1px solid var(--border);
 }
 .budget-summary-meta-row {
-  display: flex; justify-content: space-between; gap: 12px;
+  display: flex; justify-content: space-between; gap: 3mm;
 }
 .budget-summary-meta-row strong { color: var(--text); }
 
-/* Decision slide */
+/* ── SLIDE 10: decision ── */
 .decision-grid {
   display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 16px; margin-bottom: 36px;
+  gap: 3mm; margin-bottom: 5mm;
 }
 .dc-card {
   background: var(--surface); border: 1px solid var(--accent);
-  padding: 32px 28px;
+  padding: 6mm 5mm;
 }
 .dc-label {
-  font-size: 10px; font-weight: 700;
+  font-size: 7pt; font-weight: 700;
   letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--accent); margin-bottom: 12px;
+  color: var(--accent); margin-bottom: 3mm;
 }
 .dc-val {
-  font-size: clamp(22px, 2.4vw, 32px);
-  font-weight: 900; letter-spacing: -0.02em;
-  line-height: 1.15; margin-bottom: 12px;
+  font-size: 16pt; font-weight: 900;
+  letter-spacing: -0.02em; line-height: 1.15;
+  margin-bottom: 3mm;
 }
 .dc-sub {
-  font-size: 12px; color: var(--text-dim); line-height: 1.5;
+  font-size: 8.5pt; color: var(--text-dim); line-height: 1.45;
 }
 .signoff {
   background: var(--surface); border: 1px solid var(--border2);
-  padding: 28px;
+  padding: 5mm;
 }
 .signoff-title {
-  font-size: 11px; font-weight: 800;
+  font-size: 8pt; font-weight: 800;
   letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--text-muted); margin-bottom: 16px;
+  color: var(--text-muted); margin-bottom: 3mm;
 }
 .signoff-list {
-  display: flex; flex-direction: column; gap: 10px;
-  font-size: 14px; color: var(--text-dim); line-height: 1.6;
+  display: flex; flex-direction: column; gap: 1.8mm;
+  font-size: 9.5pt; color: var(--text-dim); line-height: 1.5;
 }
 .signoff-list li {
-  list-style: none; padding-left: 18px; position: relative;
+  list-style: none; padding-left: 5mm; position: relative;
 }
 .signoff-list li::before {
   content: '→'; position: absolute; left: 0; color: var(--accent);
 }
-
-/* Responsive */
-@media (max-width: 900px) {
-  .slide { padding: 44px 24px; }
-  .stats-grid { grid-template-columns: 1fr 1fr; }
-  .two-col, .project-grid, .pilot-hero, .budget-grid { grid-template-columns: 1fr; gap: 24px; }
-  .inv-grid, .ebitda-row, .decision-grid { grid-template-columns: 1fr; }
-  .cover-h1 { font-size: 44px; }
-  .cover-meta { flex-wrap: wrap; gap: 28px; }
-  .nav-dots { display: none; }
-  .matrix-table { font-size: 12px; }
-  .matrix-table th, .matrix-table td { padding: 10px 8px; }
-  .gantt-table { font-size: 11px; }
-}
 </style>
 </head>
 <body>
+<div class="deck">
 
-<nav class="nav-dots" id="navDots"></nav>
-
-<!-- ═════════════ SLIDE 1: COVER ═════════════ -->
+<!-- ════════ SLIDE 1: COVER ════════ -->
 <section class="slide" id="s1">
   <div class="cover-badge">Инвестиционный документ · Май 2026</div>
-  <div>
-    <h1 class="cover-h1">
-      RuTube<br>
-      Influencer<br>
-      <span class="em">Platform</span>
-    </h1>
-    <p class="cover-sub">
-      Платформа-маркетплейс для связи рекламодателей и блогеров на RuTube.
-      Прогноз на 36 месяцев на основе открытых данных рынка 2024–2026.
-    </p>
+
+  <div class="cover-h1">
+    RuTube<br>
+    Influencer<br>
+    <span class="em">Platform</span>
   </div>
+  <p class="cover-sub">
+    Платформа-маркетплейс для связи рекламодателей и блогеров на RuTube.
+    Прогноз на 36 месяцев на основе открытых данных рынка 2024–2026.
+  </p>
+
   <div class="cover-meta">
     <div class="cm-item">
       <span class="cm-label">Бюджет пилота</span>
@@ -572,338 +571,279 @@ body {
   </div>
 </section>
 
-<!-- ═════════════ SLIDE 2: ОПИСАНИЕ ПРОЕКТА ═════════════ -->
+<!-- ════════ SLIDE 2: ОПИСАНИЕ ════════ -->
 <section class="slide" id="s2">
-  <div class="slide-index"><span class="num">01</span> / ОПИСАНИЕ ПРОЕКТА</div>
-  <p class="section-label">Что мы строим</p>
+  <div class="slide-num"><span class="acc">01</span> / 09</div>
+  <div class="section-label">Описание проекта</div>
   <h2 class="section-title">Маркетплейс для<br>интеграций на RuTube</h2>
 
-  <div class="project-grid">
-    <div class="proj-block">
-      <div class="proj-block-title">Суть продукта</div>
-      <p class="proj-block-text">
-        Двусторонняя цифровая платформа, агрегирующая <strong>спрос рекламодателей</strong>
-        (бренды малого и среднего бизнеса) и <strong>предложение инфлюенсеров</strong>
-        на RuTube. Платформа берёт на себя поиск блогеров под нишу бренда,
-        управление кампанией, прозрачную атрибуцию продаж через UTM
-        и промокоды, а также расчёты со сторонами. Монетизация —
-        <strong>20% комиссии</strong> с каждой сделки (рыночный бенчмарк агентств).
-      </p>
+  <div class="body-area">
+    <div class="proj-grid">
+      <div class="proj-block">
+        <div class="proj-block-title">Суть продукта</div>
+        <div class="proj-block-text">
+          Двусторонняя цифровая платформа, агрегирующая <strong>спрос рекламодателей</strong>
+          (бренды малого и среднего бизнеса) и <strong>предложение инфлюенсеров</strong>
+          на RuTube. Платформа ищет блогеров под нишу бренда, управляет
+          кампанией, обеспечивает прозрачную атрибуцию продаж через UTM
+          и промокоды и проводит расчёты со сторонами. Монетизация —
+          <strong>20% комиссии</strong> с каждой сделки.
+        </div>
+      </div>
+      <div class="proj-block">
+        <div class="proj-block-title">Сегмент и ниша</div>
+        <div class="proj-block-text">
+          Целевой сегмент — <strong>микро- и средние блогеры RuTube</strong>
+          (10K–500K подписчиков). Это ~70% объёма рынка, но самая фрагментированная
+          часть, где у брендов нет инструментов прямого подбора. Целевые рекламодатели —
+          e-commerce и FMCG, для которых важна прозрачная атрибуция продаж,
+          а не охватные метрики.
+        </div>
+      </div>
     </div>
-    <div class="proj-block">
-      <div class="proj-block-title">Сегмент и ниша</div>
-      <p class="proj-block-text">
-        Целевой сегмент — <strong>микро- и средние блогеры RuTube</strong>
-        (10K–500K подписчиков). Это ~70% объёма рынка, но самая фрагментированная
-        часть, где у брендов нет инструментов прямого подбора. Целевые рекламодатели —
-        e-commerce и FMCG, для которых важна прозрачная атрибуция продаж,
-        а не охватные метрики.
-      </p>
-    </div>
-  </div>
 
-  <div style="margin-top: 32px;">
-    <div class="col-head">Денежный поток платформы</div>
     <div class="value-flow">
       <div class="vf-node">
         <div class="vf-role">Рекламодатель</div>
-        <div class="vf-name">Бренд платит 18 000 ₽</div>
+        <div class="vf-name">Платит 18 000 ₽</div>
       </div>
       <div class="vf-node center">
         <div class="vf-role">Платформа</div>
-        <div class="vf-name" style="color: var(--accent);">Удерживает 3 000 ₽ (20%)</div>
+        <div class="vf-name">Удерживает 3 000 ₽ (20%)</div>
       </div>
       <div class="vf-node">
         <div class="vf-role">Инфлюенсер</div>
-        <div class="vf-name">Блогер получает 15 000 ₽</div>
+        <div class="vf-name">Получает 15 000 ₽</div>
       </div>
     </div>
   </div>
 
   <div class="slide-footer">
-    <span>Базовая модель: микро-сегмент, средняя стоимость интеграции 15 000 ₽; цена для бренда — 18 000 ₽</span>
-    <strong>Источники: АБА 2025 · friendiva.com</strong>
+    <span>Базовая модель: средняя стоимость интеграции 15 000 ₽; цена для бренда — 18 000 ₽</span>
+    <strong>АБА 2025 · friendiva.com</strong>
   </div>
 </section>
 
-<!-- ═════════════ SLIDE 3: ПРЕДПОСЫЛКИ РЫНКА ═════════════ -->
+<!-- ════════ SLIDE 3: ПРЕДПОСЫЛКИ РЫНКА ════════ -->
 <section class="slide" id="s3">
-  <div class="slide-index"><span class="num">02</span> / ПРЕДПОСЫЛКИ РЫНКА</div>
-  <p class="section-label">Почему именно сейчас</p>
+  <div class="slide-num"><span class="acc">02</span> / 09</div>
+  <div class="section-label">Предпосылки рынка · почему сейчас</div>
   <h2 class="section-title">Окно возможностей<br>2026–2027</h2>
 
-  <div class="tldr-strip">
-    <strong>Короткая логика:</strong> Instagram заблокирован для рекламы с 01.09.2025
-    (−11,6 млрд ₽ перетекают). RuTube — самая быстрорастущая видео-платформа РФ
-    (+117% мобильных MAU за полугодие). При этом инструмент для прямой связи
-    брендов с микро-блогерами на RuTube ещё <strong>не сформировался</strong> —
-    конкуренты (Getblogger, Epicstars) сидят на YouTube/Telegram.
-  </div>
+  <div class="body-area">
+    <div class="tldr-strip">
+      <strong>Логика:</strong> Instagram заблокирован для рекламы с 01.09.2025 (−11,6 млрд ₽
+      перетекают). RuTube — самая быстрорастущая видео-платформа РФ (+117% мобильных MAU
+      за полугодие). Инструмент для прямой связи брендов с микро-блогерами на RuTube
+      ещё <strong>не сформировался</strong> — конкуренты (Getblogger, Epicstars)
+      сидят на YouTube/Telegram.
+    </div>
 
-  <div class="stats-grid">
-    <div class="stat-cell">
-      <div class="stat-v acc">85 млн</div>
-      <div class="stat-l">MAU RuTube, декабрь 2025 (Mediascope)</div>
-      <div class="stat-s">Прогноз 2026: ~102 млн (+20%)</div>
-    </div>
-    <div class="stat-cell">
-      <div class="stat-v grn">+128%</div>
-      <div class="stat-l">Рост рекламы у блогеров на RuTube 2024 → 2025</div>
-      <div class="stat-s">Kokoc Group: 250M ₽ → 570M ₽</div>
-    </div>
-    <div class="stat-cell">
-      <div class="stat-v acc2">~1 ₽</div>
-      <div class="stat-l">CPV — самый дешёвый инвентарь среди видео</div>
-      <div class="stat-s">Для сравнения: YouTube — 2,5 ₽; Telegram-видео — 4,1 ₽</div>
-    </div>
-    <div class="stat-cell">
-      <div class="stat-v amb">+170%</div>
-      <div class="stat-l">План «Газпром-медиа» по доходам RuTube 2026</div>
-      <div class="stat-s">2,2 млрд → 6 млрд ₽ (Жаров, ComNews 2026)</div>
-    </div>
-  </div>
-
-  <div class="two-col" style="margin-top: 16px;">
-    <div>
-      <div class="col-head">Драйверы спроса</div>
-      <div class="kv-list">
-        <div class="kv-row">
-          <span class="kv-key">Закон о рекламе в Instagram (с 01.09.2025)</span>
-          <span class="kv-val">−11,6 млрд ₽ бюджетов</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">YouTube теряет аудиторию</span>
-          <span class="kv-val">−6 млн MAU за 2024</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">Прогноз доли VK + RuTube в инфлюенс-маркетинге 2025</span>
-          <span class="kv-val acc">15,9% (8,2 млрд ₽)</span>
-        </div>
+    <div class="stats-grid">
+      <div class="stat-cell">
+        <div class="stat-v acc">85 млн</div>
+        <div class="stat-l">MAU RuTube, декабрь 2025</div>
+        <div class="stat-s">Прогноз 2026: ~102 млн (+20%)</div>
       </div>
-    </div>
-    <div>
-      <div class="col-head">Окно для входа</div>
-      <div class="kv-list">
-        <div class="kv-row">
-          <span class="kv-key">Базы блогеров RuTube у конкурентов</span>
-          <span class="kv-val red">фрагментированы</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">Топ-3 платформы (Getblogger и др.)</span>
-          <span class="kv-val">фокус на YouTube/TG</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">Время до созревания рынка</span>
-          <span class="kv-val acc">12–18 месяцев</span>
-        </div>
+      <div class="stat-cell">
+        <div class="stat-v grn">+128%</div>
+        <div class="stat-l">Рост рекламы у блогеров RuTube 2024→2025</div>
+        <div class="stat-s">Kokoc: 250M → 570M ₽</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-v acc2">~1 ₽</div>
+        <div class="stat-l">CPV — самый дешёвый среди видео</div>
+        <div class="stat-s">YouTube — 2,5 ₽; Telegram — 4,1 ₽</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-v amb">+170%</div>
+        <div class="stat-l">План «Газпром-медиа» 2026</div>
+        <div class="stat-s">2,2 → 6 млрд ₽ (Жаров)</div>
       </div>
     </div>
   </div>
 
   <div class="slide-footer">
-    <span>АКАР · АБА · АРИР · Mediascope · Kokoc Group · Коммерсантъ · ComNews 2024–2026</span>
-    <strong>Стоимость задержки: каждый месяц = +5–8% к окупаемости</strong>
+    <span>Источники: АКАР · АБА · АРИР · Mediascope · Kokoc Group · Коммерсантъ · ComNews 2024–2026</span>
+    <strong>Стоимость задержки: +5–8% к окупаемости каждый месяц</strong>
   </div>
 </section>
 
-<!-- ═════════════ SLIDE 4: ГРАФИК P&L ═════════════ -->
+<!-- ════════ SLIDE 4: P&L ════════ -->
 <section class="slide" id="s4">
-  <div class="slide-index"><span class="num">03</span> / P&amp;L</div>
-  <p class="section-label">Финансовая модель — 36 месяцев</p>
+  <div class="slide-num"><span class="acc">03</span> / 09</div>
+  <div class="section-label">Финансовая модель · 36 месяцев</div>
   <h2 class="section-title">Денежный поток<br>и точки разворота</h2>
 
-  <div class="pnl-wrap">
-    <div class="pnl-axis-y">
-      <span>EBITDA / мес, тыс. ₽</span>
-      <span style="color: var(--grn);">+3 500</span>
+  <div class="body-area">
+    <div class="pnl-wrap">
+      <div class="pnl-axis-y">
+        <span>EBITDA / мес, тыс. ₽</span>
+        <span style="color: var(--grn);">+3 500</span>
+      </div>
+      <div class="pnl-chart" id="pnlChart">
+        <div class="pnl-zero"></div>
+      </div>
+      <div class="pnl-axis-x">
+        <span>M1</span><span>M6</span><span>M12</span><span>M18</span>
+        <span>M24</span><span>M30</span><span>M36</span>
+      </div>
     </div>
-    <div class="pnl-chart" id="pnlChart">
-      <div class="pnl-zero"></div>
-    </div>
-    <div class="pnl-axis-x">
-      <span>M1</span><span>M6</span><span>M12</span><span>M18</span>
-      <span>M24</span><span>M30</span><span>M36</span>
-    </div>
-  </div>
 
-  <div class="pnl-markers">
-    <div class="pnl-mk">
-      <div class="pnl-mk-month">МЕС 6–7</div>
-      <div class="pnl-mk-val">Break-even</div>
-      <div class="pnl-mk-label">EBITDA выходит в плюс при ~126 интеграций/мес</div>
-    </div>
-    <div class="pnl-mk">
-      <div class="pnl-mk-month">МЕС 14</div>
-      <div class="pnl-mk-val">Окупаемость</div>
-      <div class="pnl-mk-label">Накопленная EBITDA покрывает MVP + операц. убытки</div>
-    </div>
-    <div class="pnl-mk">
-      <div class="pnl-mk-month">МЕС 24</div>
-      <div class="pnl-mk-val">~24 млн ₽</div>
-      <div class="pnl-mk-label">Накопленная EBITDA с учётом дисконта (NPV)</div>
-    </div>
-    <div class="pnl-mk">
-      <div class="pnl-mk-month">МЕС 36</div>
-      <div class="pnl-mk-val">~38 млн ₽</div>
-      <div class="pnl-mk-label">NPV (ставка 20% годовых)</div>
+    <div class="pnl-markers">
+      <div class="pnl-mk">
+        <div class="pnl-mk-month">МЕС 6–7</div>
+        <div class="pnl-mk-val">Break-even</div>
+        <div class="pnl-mk-label">EBITDA выходит в плюс при ~126 интеграций/мес</div>
+      </div>
+      <div class="pnl-mk">
+        <div class="pnl-mk-month">МЕС 14</div>
+        <div class="pnl-mk-val">Окупаемость</div>
+        <div class="pnl-mk-label">Накопленная EBITDA покрывает MVP + убытки</div>
+      </div>
+      <div class="pnl-mk">
+        <div class="pnl-mk-month">МЕС 24</div>
+        <div class="pnl-mk-val">~24 млн ₽</div>
+        <div class="pnl-mk-label">Накопленная NPV</div>
+      </div>
+      <div class="pnl-mk">
+        <div class="pnl-mk-month">МЕС 36</div>
+        <div class="pnl-mk-val">~38 млн ₽</div>
+        <div class="pnl-mk-label">NPV (ставка 20% годовых)</div>
+      </div>
     </div>
   </div>
 
   <div class="slide-footer">
-    <span>Базовый сценарий: 350 интеграций/мес к месяцу 12; средняя стоимость 25 000 ₽; комиссия 20%; ОpEx 750 K ₽/мес</span>
-    <strong>Сценарии: см. слайд 5</strong>
+    <span>Базовый сценарий: 350 интеграций/мес к M12; средняя стоимость 25 000 ₽; комиссия 20%; ОpEx 750 K ₽/мес</span>
+    <strong>Сценарии — следующий слайд</strong>
   </div>
 </section>
 
-<!-- ═════════════ SLIDE 5: ИНВЕСТОРУ ═════════════ -->
+<!-- ════════ SLIDE 5: ИНВЕСТОРУ ════════ -->
 <section class="slide" id="s5">
-  <div class="slide-index"><span class="num">04</span> / ИНВЕСТОРУ</div>
-  <p class="section-label">Ключевые показатели</p>
+  <div class="slide-num"><span class="acc">04</span> / 09</div>
+  <div class="section-label">Инвестору · ключевые показатели</div>
   <h2 class="section-title">Инвестиционная<br>привлекательность</h2>
 
-  <div class="inv-grid">
-    <div class="inv-card hi">
-      <div class="inv-card-label">Объём инвестиций — пилот</div>
-      <div class="inv-card-val">2,5 млн ₽</div>
-      <div class="inv-card-sub">4 месяца на проверку гипотез до полного запуска</div>
-    </div>
-    <div class="inv-card hi">
-      <div class="inv-card-label">Объём инвестиций — до окупаемости</div>
-      <div class="inv-card-val">12 млн ₽</div>
-      <div class="inv-card-sub">Пилот + MVP + операц. убытки до точки безубыточности</div>
-    </div>
-    <div class="inv-card hi">
-      <div class="inv-card-label">Срок окупаемости</div>
-      <div class="inv-card-val">14 мес</div>
-      <div class="inv-card-sub">С момента старта пилота, базовый сценарий</div>
-    </div>
-  </div>
-
-  <div class="inv-grid">
-    <div class="inv-card">
-      <div class="inv-card-label">NPV — 36 месяцев</div>
-      <div class="inv-card-val">~38 млн ₽</div>
-      <div class="inv-card-sub">Ставка дисконтирования 20% годовых</div>
-    </div>
-    <div class="inv-card">
-      <div class="inv-card-label">IRR</div>
-      <div class="inv-card-val">~95%</div>
-      <div class="inv-card-sub">Внутренняя норма доходности на горизонте 3 лет</div>
-    </div>
-    <div class="inv-card">
-      <div class="inv-card-label">ROI годовых (после M14)</div>
-      <div class="inv-card-val">~280%</div>
-      <div class="inv-card-sub">EBITDA год / накопленные инвестиции</div>
-    </div>
-  </div>
-
-  <div style="margin-top: 16px;">
-    <div class="col-head">Прогнозная EBITDA на ключевые точки</div>
-    <div class="ebitda-row">
-      <div class="ebitda-cell">
-        <div class="ebitda-month">12 мес</div>
-        <div class="ebitda-val">+750 K ₽/мес</div>
+  <div class="body-area">
+    <div class="inv-grid" style="margin-bottom: 4mm;">
+      <div class="inv-card hi">
+        <div class="inv-card-label">Инвестиции — пилот</div>
+        <div class="inv-card-val">2,5 млн ₽</div>
+        <div class="inv-card-sub">4 месяца на проверку гипотез</div>
       </div>
-      <div class="ebitda-cell">
-        <div class="ebitda-month">24 мес</div>
-        <div class="ebitda-val">+2 100 K ₽/мес</div>
+      <div class="inv-card hi">
+        <div class="inv-card-label">Инвестиции — до окупаемости</div>
+        <div class="inv-card-val">12 млн ₽</div>
+        <div class="inv-card-sub">Пилот + MVP + операц. убытки</div>
       </div>
-      <div class="ebitda-cell">
-        <div class="ebitda-month">36 мес</div>
-        <div class="ebitda-val">+3 500 K ₽/мес</div>
+      <div class="inv-card hi">
+        <div class="inv-card-label">Срок окупаемости</div>
+        <div class="inv-card-val">14 мес</div>
+        <div class="inv-card-sub">С момента старта пилота</div>
+      </div>
+    </div>
+
+    <div class="inv-grid" style="margin-bottom: 5mm;">
+      <div class="inv-card">
+        <div class="inv-card-label">NPV — 36 месяцев</div>
+        <div class="inv-card-val">~38 млн ₽</div>
+        <div class="inv-card-sub">Ставка 20% годовых</div>
+      </div>
+      <div class="inv-card">
+        <div class="inv-card-label">IRR</div>
+        <div class="inv-card-val">~95%</div>
+        <div class="inv-card-sub">На горизонте 3 лет</div>
+      </div>
+      <div class="inv-card">
+        <div class="inv-card-label">ROI годовых (после M14)</div>
+        <div class="inv-card-val">~280%</div>
+        <div class="inv-card-sub">EBITDA год / инвестиции</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="col-head">EBITDA на ключевые точки</div>
+      <div class="ebitda-row">
+        <div class="ebitda-cell">
+          <div class="ebitda-month">12 мес</div>
+          <div class="ebitda-val">+750 K&nbsp;₽/мес</div>
+        </div>
+        <div class="ebitda-cell">
+          <div class="ebitda-month">24 мес</div>
+          <div class="ebitda-val">+2,1 млн&nbsp;₽/мес</div>
+        </div>
+        <div class="ebitda-cell">
+          <div class="ebitda-month">36 мес</div>
+          <div class="ebitda-val">+3,5 млн&nbsp;₽/мес</div>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="slide-footer">
-    <span>Расчёты на основе открытых рыночных данных (АКАР, АБА, Kokoc Group, Mediascope) — будут уточнены после пилота</span>
+    <span>Расчёты — на открытых данных рынка, будут уточнены после пилота</span>
     <strong>Базовый сценарий</strong>
   </div>
 </section>
 
-<!-- ═════════════ SLIDE 6: ПИЛОТНЫЙ ПРОЕКТ ═════════════ -->
+<!-- ════════ SLIDE 6: ПИЛОТ ════════ -->
 <section class="slide" id="s6">
-  <div class="slide-index"><span class="num">05</span> / ПИЛОТНЫЙ ПРОЕКТ</div>
-  <p class="section-label">Минимально жизнеспособная поставка</p>
+  <div class="slide-num"><span class="acc">05</span> / 09</div>
+  <div class="section-label">Пилотный проект · MVP</div>
   <h2 class="section-title">Проверка трёх<br>гипотез за 4 месяца</h2>
 
-  <div class="pilot-hero">
-    <div>
+  <div class="body-area">
+    <div class="pilot-hero" style="margin-bottom: 6mm;">
       <p class="pilot-quote">
-        Цель пилота — за <span class="em">8–10 недель работы и ~2,5 млн ₽</span>
-        получить статистически достоверный ответ: сходится ли модель
-        в горизонте года или нет.
+        Цель пилота — за <span class="em">8–10 недель и ~2,5 млн ₽</span>
+        получить статистически достоверный ответ:
+        сходится ли модель в горизонте года или нет.
       </p>
-    </div>
-    <div>
-      <div class="col-head">Что проверяем</div>
-      <div class="kv-list">
-        <div class="kv-row">
-          <span class="kv-key">Conv лид → платящий бренд</span>
-          <span class="kv-val acc">≥ 30%</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">ROMI пилота для рекламодателя</span>
-          <span class="kv-val acc">≥ 50%</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">Repeat Rate за 60 дней</span>
-          <span class="kv-val acc">≥ 50%</span>
+      <div>
+        <div class="col-head">Что проверяем</div>
+        <div class="kv-list">
+          <div class="kv-row"><span class="kv-key">Conv лид → платящий бренд</span><span class="kv-val acc">≥ 30%</span></div>
+          <div class="kv-row"><span class="kv-key">ROMI пилота для рекламодателя</span><span class="kv-val acc">≥ 50%</span></div>
+          <div class="kv-row"><span class="kv-key">Repeat Rate за 60 дней</span><span class="kv-val acc">≥ 50%</span></div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="two-col">
-    <div>
-      <div class="col-head">Зачем именно эти три метрики</div>
-      <div class="kv-list">
-        <div class="kv-row">
-          <span class="kv-key">Conv лид→бренд → есть ли спрос?</span>
-          <span class="kv-val">Outbound-тест 50 брендов</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">ROMI бренда → работает ли юнит-экономика?</span>
-          <span class="kv-val">10 пилотных интеграций</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">Repeat Rate → есть ли LTV?</span>
-          <span class="kv-val">Замер на 60-й день</span>
+    <div class="two-col">
+      <div>
+        <div class="col-head">Зачем именно эти три</div>
+        <div class="kv-list">
+          <div class="kv-row"><span class="kv-key">Conv лид→бренд → есть ли спрос?</span><span class="kv-val">Outbound 50 брендов</span></div>
+          <div class="kv-row"><span class="kv-key">ROMI бренда → работает ли юнит-экономика?</span><span class="kv-val">10 интеграций</span></div>
+          <div class="kv-row"><span class="kv-key">Repeat Rate → есть ли LTV?</span><span class="kv-val">Замер на 60-й день</span></div>
         </div>
       </div>
-    </div>
-    <div>
-      <div class="col-head">Цена ответа</div>
-      <div class="kv-list">
-        <div class="kv-row">
-          <span class="kv-key">Бюджет пилота</span>
-          <span class="kv-val acc">2,5 млн ₽</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">% от полного бюджета MVP</span>
-          <span class="kv-val">~21%</span>
-        </div>
-        <div class="kv-row">
-          <span class="kv-key">Время до решения Go/No-Go</span>
-          <span class="kv-val">4 месяца</span>
+      <div>
+        <div class="col-head">Цена ответа</div>
+        <div class="kv-list">
+          <div class="kv-row"><span class="kv-key">Бюджет пилота</span><span class="kv-val acc">2,5 млн ₽</span></div>
+          <div class="kv-row"><span class="kv-key">% от полного бюджета MVP</span><span class="kv-val">~21%</span></div>
+          <div class="kv-row"><span class="kv-key">Срок до решения Go/No-Go</span><span class="kv-val">4 месяца</span></div>
         </div>
       </div>
     </div>
   </div>
 
   <div class="slide-footer">
-    <span>Логика: дешёвая страховка от неработающей экономики — стоит ~21% от полной разработки</span>
-    <strong>Решение по матрице → следующий слайд</strong>
+    <span>Дешёвая страховка от неработающей экономики — ~21% от полной разработки MVP</span>
+    <strong>Решение → следующий слайд</strong>
   </div>
 </section>
 
-<!-- ═════════════ SLIDE 7: МАТРИЦА РЕШЕНИЯ ═════════════ -->
+<!-- ════════ SLIDE 7: МАТРИЦА РЕШЕНИЯ ════════ -->
 <section class="slide" id="s7">
-  <div class="slide-index"><span class="num">06</span> / МАТРИЦА РЕШЕНИЯ</div>
-  <p class="section-label">Go / Fix / Stop</p>
-  <h2 class="section-title">Что делаем при<br>каждом сигнале</h2>
+  <div class="slide-num"><span class="acc">06</span> / 09</div>
+  <div class="section-label">Матрица решения · Go / Fix / Stop</div>
+  <h2 class="section-title">Что делаем<br>при каждом сигнале</h2>
 
-  <div class="matrix-wrap">
+  <div class="body-area">
     <table class="matrix-table">
       <thead>
         <tr>
@@ -937,7 +877,7 @@ body {
           </td>
           <td class="matrix-cell fix">
             20–50%
-            <span class="why">Сужать вертикаль / искать категории с лучшим CR</span>
+            <span class="why">Сужать вертикаль, искать категории с лучшим CR</span>
           </td>
           <td class="matrix-cell stop">
             <span class="sign">&lt;</span>20%
@@ -952,11 +892,11 @@ body {
           </td>
           <td class="matrix-cell fix">
             30–50%
-            <span class="why">Маржа сходится, единичные клиенты не вытянут масштаб</span>
+            <span class="why">Маржа сходится, но единичные клиенты не вытянут масштаб</span>
           </td>
           <td class="matrix-cell stop">
             <span class="sign">&lt;</span>30%
-            <span class="why">Нет повторных покупок → нет LTV → модель не сойдётся</span>
+            <span class="why">Нет повторов → нет LTV → модель не сойдётся</span>
           </td>
         </tr>
       </tbody>
@@ -964,18 +904,18 @@ body {
   </div>
 
   <div class="slide-footer">
-    <span><strong>Правило:</strong> хотя бы один «Стоп» — приостанавливаем проект до пересмотра ниши, оффера или экономики. Все три «Идём» — переходим к разработке MVP.</span>
-    <span class="budget-tag">Бюджет пилота: 2,5 млн ₽ · 4 месяца</span>
+    <span><strong>Правило:</strong> хотя бы один «Стоп» — приостанавливаем до пересмотра ниши/оффера. Все три «Идём» — переходим к MVP.</span>
+    <span class="budget-tag">Бюджет пилота: 2,5 млн ₽ · 4 мес</span>
   </div>
 </section>
 
-<!-- ═════════════ SLIDE 8: СКОУП — ГАНТ ═════════════ -->
+<!-- ════════ SLIDE 8: ГАНТ ════════ -->
 <section class="slide" id="s8">
-  <div class="slide-index"><span class="num">07</span> / СКОУП ПИЛОТА</div>
-  <p class="section-label">Диаграмма Ганта</p>
+  <div class="slide-num"><span class="acc">07</span> / 09</div>
+  <div class="section-label">Скоуп пилота · диаграмма Ганта</div>
   <h2 class="section-title">План работ<br>с 1 июня 2026</h2>
 
-  <div class="gantt-wrap">
+  <div class="body-area">
     <table class="gantt-table">
       <thead>
         <tr>
@@ -988,311 +928,180 @@ body {
       </thead>
       <tbody>
         <tr>
-          <td class="epic-name">
-            E1. Инфраструктура трекинга
-            <span class="epic-sub">UTM, промокоды, дашборд атрибуции, CRM</span>
-          </td>
+          <td class="epic-name">E1. Инфраструктура трекинга<span class="epic-sub">UTM, промокоды, дашборд атрибуции, CRM</span></td>
           <td class="gantt-cell"><div class="gantt-bar" style="left: 8%; width: 84%;">3 нед</div></td>
           <td class="gantt-cell"><div class="gantt-bar" style="left: 0; width: 35%;">1 нед</div></td>
-          <td></td>
-          <td></td>
+          <td></td><td></td>
         </tr>
         <tr>
-          <td class="epic-name">
-            E2. Outbound к 50 брендам
-            <span class="epic-sub">Скрипты, холодные письма, демо-звонки</span>
-          </td>
+          <td class="epic-name">E2. Outbound к 50 брендам<span class="epic-sub">Скрипты, холодные письма, демо-звонки</span></td>
           <td class="gantt-cell"><div class="gantt-bar" style="left: 50%; width: 50%;">2 нед</div></td>
           <td class="gantt-cell"><div class="gantt-bar" style="left: 0; width: 100%;">4 нед</div></td>
-          <td></td>
-          <td></td>
+          <td></td><td></td>
         </tr>
         <tr>
-          <td class="epic-name">
-            E3. Подключение блогеров RuTube
-            <span class="epic-sub">База 30 блогеров, отбор 10 для пилота</span>
-          </td>
+          <td class="epic-name">E3. Подключение блогеров RuTube<span class="epic-sub">База 30 блогеров, отбор 10 для пилота</span></td>
           <td></td>
           <td class="gantt-cell"><div class="gantt-bar" style="left: 30%; width: 70%;">3 нед</div></td>
           <td class="gantt-cell"><div class="gantt-bar" style="left: 0; width: 25%;">1 нед</div></td>
           <td></td>
         </tr>
         <tr>
-          <td class="epic-name">
-            E4. Запуск 10 пилотных интеграций
-            <span class="epic-sub">Брифы, продакшн, размещение, контроль</span>
-          </td>
-          <td></td>
-          <td></td>
+          <td class="epic-name">E4. Запуск 10 пилотных интеграций<span class="epic-sub">Брифы, продакшн, размещение</span></td>
+          <td></td><td></td>
           <td class="gantt-cell"><div class="gantt-bar" style="left: 10%; width: 80%;">3 нед</div></td>
           <td></td>
         </tr>
         <tr>
-          <td class="epic-name">
-            E5. Замер ROMI и Conv
-            <span class="epic-sub">Сбор первичной аналитики продаж</span>
-          </td>
-          <td></td>
-          <td></td>
+          <td class="epic-name">E5. Замер ROMI и Conv<span class="epic-sub">Сбор первичной аналитики продаж</span></td>
+          <td></td><td></td>
           <td class="gantt-cell"><div class="gantt-bar outline" style="left: 50%; width: 50%;">тест</div></td>
           <td class="gantt-cell"><div class="gantt-bar outline" style="left: 0; width: 50%;">сбор</div></td>
         </tr>
         <tr>
-          <td class="epic-name">
-            E6. Замер Repeat Rate за 60 дней
-            <span class="epic-sub">Контроль возврата клиентов после первой кампании</span>
-          </td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td class="epic-name">E6. Замер Repeat Rate за 60 дней<span class="epic-sub">Контроль возврата клиентов</span></td>
+          <td></td><td></td><td></td>
           <td class="gantt-cell"><div class="gantt-bar outline" style="left: 0; width: 100%;">2 мес наблюдения</div></td>
         </tr>
         <tr>
-          <td class="epic-name">
-            E7. Решение Go / Fix / Stop
-            <span class="epic-sub">Сверка с матрицей решения, отчёт стейкхолдерам</span>
-          </td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td class="gantt-cell"><div class="gantt-bar checkpoint" style="left: 75%; width: 25%;">★ checkpoint</div></td>
+          <td class="epic-name">E7. Решение Go / Fix / Stop<span class="epic-sub">Сверка с матрицей, отчёт стейкхолдерам</span></td>
+          <td></td><td></td><td></td>
+          <td class="gantt-cell"><div class="gantt-bar checkpoint" style="left: 35%; width: 65%;">★ checkpoint</div></td>
         </tr>
       </tbody>
     </table>
   </div>
 
   <div class="slide-footer">
-    <span>Старт 1 июня 2026 · окончание 30 сентября 2026 · checkpoint и решение Go/No-Go — последняя неделя сентября</span>
-    <span class="budget-tag">Бюджет пилота: 2,5 млн ₽</span>
+    <span>Старт 1 июня 2026 · окончание 30 сентября 2026 · решение Go/No-Go — последняя неделя сентября</span>
+    <span class="budget-tag">Бюджет: 2,5 млн ₽</span>
   </div>
 </section>
 
-<!-- ═════════════ SLIDE 9: БЮДЖЕТ ═════════════ -->
+<!-- ════════ SLIDE 9: БЮДЖЕТ ════════ -->
 <section class="slide" id="s9">
-  <div class="slide-index"><span class="num">08</span> / БЮДЖЕТ ПИЛОТА</div>
-  <p class="section-label">Структура затрат</p>
-  <h2 class="section-title">Куда уходят<br>2,5 млн ₽</h2>
+  <div class="slide-num"><span class="acc">08</span> / 09</div>
+  <div class="section-label">Бюджет пилота · структура</div>
+  <h2 class="section-title" style="margin-bottom: 4mm;">Куда уходят 2,5 млн ₽</h2>
 
-  <div class="budget-grid">
-    <div>
-      <table class="budget-table">
-        <thead>
-          <tr>
-            <th>Статья</th>
-            <th>Расчёт</th>
-            <th class="num">Сумма, ₽</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="cat"><td colspan="3">ФОТ команды (4 месяца)</td></tr>
-          <tr>
-            <td>Руководитель проекта</td>
-            <td>200 000 ₽/мес × 4</td>
-            <td class="num">800 000</td>
-          </tr>
-          <tr>
-            <td>Менеджер продаж (SDR + outbound)</td>
-            <td>120 000 ₽/мес × 3</td>
-            <td class="num">360 000</td>
-          </tr>
-          <tr>
-            <td>Менеджер по работе с блогерами</td>
-            <td>90 000 ₽/мес × 3</td>
-            <td class="num">270 000</td>
-          </tr>
-          <tr>
-            <td>Аналитик (part-time)</td>
-            <td>80 000 ₽/мес × 4</td>
-            <td class="num">320 000</td>
-          </tr>
-          <tr class="subtotal">
-            <td>Итого ФОТ</td>
-            <td></td>
-            <td class="num">1 750 000</td>
-          </tr>
+  <div class="body-area">
+    <div class="budget-grid">
+      <div>
+        <table class="budget-table">
+          <thead>
+            <tr><th>Статья</th><th>Расчёт</th><th class="num">Сумма, ₽</th></tr>
+          </thead>
+          <tbody>
+            <tr class="cat"><td colspan="3">ФОТ команды (4 мес.)</td></tr>
+            <tr><td>Руководитель проекта</td><td>200 000 × 4</td><td class="num">800 000</td></tr>
+            <tr><td>Менеджер продаж (SDR)</td><td>120 000 × 3</td><td class="num">360 000</td></tr>
+            <tr><td>Менеджер по блогерам</td><td>90 000 × 3</td><td class="num">270 000</td></tr>
+            <tr><td>Аналитик (part-time)</td><td>80 000 × 4</td><td class="num">320 000</td></tr>
+            <tr class="subtotal"><td>Итого ФОТ</td><td></td><td class="num">1 750 000</td></tr>
 
-          <tr class="cat"><td colspan="3">Закупки и интеграции</td></tr>
-          <tr>
-            <td>10 пилотных интеграций (микро-сегмент)</td>
-            <td>15 000 ₽ × 10</td>
-            <td class="num">150 000</td>
-          </tr>
-          <tr>
-            <td>Резерв под расширенные тесты (нишевый сегмент)</td>
-            <td>—</td>
-            <td class="num">100 000</td>
-          </tr>
-          <tr>
-            <td>Outsourced задачи (дизайн брифов, A/B тексты)</td>
-            <td>—</td>
-            <td class="num">80 000</td>
-          </tr>
-          <tr class="subtotal">
-            <td>Итого закупки</td>
-            <td></td>
-            <td class="num">330 000</td>
-          </tr>
+            <tr class="cat"><td colspan="3">Закупки и интеграции</td></tr>
+            <tr><td>10 интеграций (микро-сегмент)</td><td>15 000 × 10</td><td class="num">150 000</td></tr>
+            <tr><td>Резерв на расширенные тесты</td><td>—</td><td class="num">100 000</td></tr>
+            <tr><td>Outsourced задачи</td><td>дизайн брифов, A/B</td><td class="num">80 000</td></tr>
+            <tr class="subtotal"><td>Итого закупки</td><td></td><td class="num">330 000</td></tr>
 
-          <tr class="cat"><td colspan="3">Аренда инфры и инструментов</td></tr>
-          <tr>
-            <td>CRM, почтовые рассылки, ATS</td>
-            <td>15 000 ₽/мес × 4</td>
-            <td class="num">60 000</td>
-          </tr>
-          <tr>
-            <td>Аналитика (Yandex Metrica, attribution-tool)</td>
-            <td>20 000 ₽/мес × 4</td>
-            <td class="num">80 000</td>
-          </tr>
-          <tr>
-            <td>Хостинг, домен, SSL, чат-боты</td>
-            <td>—</td>
-            <td class="num">40 000</td>
-          </tr>
-          <tr>
-            <td>Юр./бух. сопровождение договоров</td>
-            <td>—</td>
-            <td class="num">120 000</td>
-          </tr>
-          <tr>
-            <td>Резерв (~5%)</td>
-            <td>—</td>
-            <td class="num">120 000</td>
-          </tr>
-          <tr class="subtotal">
-            <td>Итого инфра + резерв</td>
-            <td></td>
-            <td class="num">420 000</td>
-          </tr>
+            <tr class="cat"><td colspan="3">Аренда инфры и инструментов</td></tr>
+            <tr><td>CRM, рассылки, ATS</td><td>15 000 × 4</td><td class="num">60 000</td></tr>
+            <tr><td>Аналитика, attribution</td><td>20 000 × 4</td><td class="num">80 000</td></tr>
+            <tr><td>Хостинг, домен, чат-боты</td><td>—</td><td class="num">40 000</td></tr>
+            <tr><td>Юр./бух. сопровождение</td><td>—</td><td class="num">120 000</td></tr>
+            <tr><td>Резерв (~5%)</td><td>—</td><td class="num">120 000</td></tr>
+            <tr class="subtotal"><td>Итого инфра + резерв</td><td></td><td class="num">420 000</td></tr>
 
-          <tr class="total">
-            <td>ИТОГО БЮДЖЕТ ПИЛОТА</td>
-            <td></td>
-            <td class="num">2 500 000</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+            <tr class="total"><td>ИТОГО БЮДЖЕТ ПИЛОТА</td><td></td><td class="num">2 500 000</td></tr>
+          </tbody>
+        </table>
+      </div>
 
-    <div class="budget-summary">
-      <div class="budget-summary-title">Итого</div>
-      <div class="budget-summary-val">2,5 млн ₽</div>
-      <div class="budget-summary-meta">
-        <div class="budget-summary-meta-row">
-          <span>ФОТ</span>
-          <strong>70%</strong>
-        </div>
-        <div class="budget-summary-meta-row">
-          <span>Закупки</span>
-          <strong>13%</strong>
-        </div>
-        <div class="budget-summary-meta-row">
-          <span>Инфра + резерв</span>
-          <strong>17%</strong>
-        </div>
-        <div class="budget-summary-meta-row" style="margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--border);">
-          <span>Срок</span>
-          <strong>4 месяца</strong>
-        </div>
-        <div class="budget-summary-meta-row">
-          <span>Burn rate</span>
-          <strong>~625 K ₽/мес</strong>
+      <div class="budget-summary">
+        <div class="budget-summary-title">Итого</div>
+        <div class="budget-summary-val">2,5 млн ₽</div>
+        <div class="budget-summary-meta">
+          <div class="budget-summary-meta-row"><span>ФОТ</span><strong>70%</strong></div>
+          <div class="budget-summary-meta-row"><span>Закупки</span><strong>13%</strong></div>
+          <div class="budget-summary-meta-row"><span>Инфра + резерв</span><strong>17%</strong></div>
+          <div class="budget-summary-meta-row" style="margin-top: 2mm; padding-top: 2mm; border-top: 1px solid var(--border);"><span>Срок</span><strong>4 мес</strong></div>
+          <div class="budget-summary-meta-row"><span>Burn rate</span><strong>~625 K ₽/мес</strong></div>
         </div>
       </div>
     </div>
   </div>
 
   <div class="slide-footer">
-    <span>Все ставки — рыночные, по данным hh.ru / Хабр Карьера на май 2026</span>
+    <span>Все ставки — рыночные (hh.ru / Хабр Карьера, май 2026)</span>
     <strong>После пилота: либо MVP (~9,5 млн ₽), либо стоп с возвратом ~30% инвестиций</strong>
   </div>
 </section>
 
-<!-- ═════════════ SLIDE 10: РЕШЕНИЕ ═════════════ -->
+<!-- ════════ SLIDE 10: РЕШЕНИЕ ════════ -->
 <section class="slide" id="s10">
-  <div class="slide-index"><span class="num">09</span> / РЕШЕНИЕ К УТВЕРЖДЕНИЮ</div>
-  <p class="section-label">Запуск пилота</p>
+  <div class="slide-num"><span class="acc">09</span> / 09</div>
+  <div class="section-label">Решение к утверждению</div>
   <h2 class="section-title">Что нужно<br>от стейкхолдеров</h2>
 
-  <div class="decision-grid">
-    <div class="dc-card">
-      <div class="dc-label">Бюджет пилота</div>
-      <div class="dc-val">2 500 000 ₽</div>
-      <div class="dc-sub">Единоразовое выделение на 4 месяца. Расход равномерный (~625 K ₽/мес).</div>
+  <div class="body-area">
+    <div class="decision-grid">
+      <div class="dc-card">
+        <div class="dc-label">Бюджет пилота</div>
+        <div class="dc-val">2 500 000 ₽</div>
+        <div class="dc-sub">Единоразовое выделение на 4 месяца. Расход равномерный (~625 K ₽/мес).</div>
+      </div>
+      <div class="dc-card">
+        <div class="dc-label">Руководитель проекта</div>
+        <div class="dc-val">Назначить Project Lead</div>
+        <div class="dc-sub">Загрузка 100%. Полномочия: бюджет, найм, операции. Отвечает за Go/Fix/Stop.</div>
+      </div>
+      <div class="dc-card">
+        <div class="dc-label">Старт проекта</div>
+        <div class="dc-val">1 июня 2026</div>
+        <div class="dc-sub">Окончание — 30 сентября. Решение по матрице — последняя неделя сентября.</div>
+      </div>
     </div>
-    <div class="dc-card">
-      <div class="dc-label">Руководитель проекта</div>
-      <div class="dc-val">Назначить Project Lead</div>
-      <div class="dc-sub">Эксклюзивная загрузка 100%. Полномочия: бюджет, найм, операционные решения. Ответственность за метрики Go/Fix/Stop.</div>
-    </div>
-    <div class="dc-card">
-      <div class="dc-label">Старт проекта</div>
-      <div class="dc-val">1 июня 2026</div>
-      <div class="dc-sub">Окончание пилота — 30 сентября 2026. Решение по матрице — последняя неделя сентября.</div>
-    </div>
-  </div>
 
-  <div class="signoff">
-    <div class="signoff-title">К моменту 1 июня нужно</div>
-    <ul class="signoff-list">
-      <li>Подписать выделение бюджета 2 500 000 ₽ на пилот</li>
-      <li>Назначить руководителя проекта с полномочиями подписания договоров до 200 K ₽</li>
-      <li>Согласовать список из 50 брендов-кандидатов для outbound-теста (вертикали e-com, FMCG)</li>
-      <li>Открыть юр. лицо или использовать существующее с возможностью договорной работы с самозанятыми (блогеры)</li>
-      <li>Утвердить матрицу решения Go/Fix/Stop как обязательный чек-пойнт по итогам пилота</li>
-    </ul>
+    <div class="signoff">
+      <div class="signoff-title">К моменту 1 июня нужно</div>
+      <ul class="signoff-list">
+        <li>Подписать выделение бюджета 2 500 000 ₽ на пилот</li>
+        <li>Назначить руководителя проекта с правом подписания договоров до 200 K ₽</li>
+        <li>Согласовать список из 50 брендов-кандидатов для outbound (e-com, FMCG)</li>
+        <li>Открыть юр. лицо или использовать существующее с возможностью договорной работы с самозанятыми</li>
+        <li>Утвердить матрицу Go/Fix/Stop как обязательный чек-пойнт по итогам пилота</li>
+      </ul>
+    </div>
   </div>
 
   <div class="slide-footer">
-    <span>Контакт для вопросов: Ярослав Шуваев · shuvaev.com</span>
+    <span>Контакт: Ярослав Шуваев · shuvaev.com</span>
     <span class="budget-tag">2,5 млн ₽ → ответ за 4 мес → решение о MVP (~9,5 млн ₽)</span>
   </div>
 </section>
 
-<script>
-// Nav dots
-const slides = document.querySelectorAll('.slide');
-const nav = document.getElementById('navDots');
-slides.forEach((s, i) => {
-  const d = document.createElement('div');
-  d.className = 'nav-dot' + (i === 0 ? ' active' : '');
-  d.onclick = () => s.scrollIntoView({ behavior: 'smooth' });
-  d.title = `Слайд ${i + 1}`;
-  nav.appendChild(d);
-});
-const dots = nav.querySelectorAll('.nav-dot');
-const obs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting && e.intersectionRatio > 0.5) {
-      const idx = Array.from(slides).indexOf(e.target);
-      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-    }
-  });
-}, { threshold: 0.5 });
-slides.forEach(s => obs.observe(s));
+</div>
 
-// PNL Chart — 36 months, EBITDA progression
-// Pilot losses M1-4 (-625K each), then 0 dev cost months M5-9 ramp,
-// break-even M6-7, full positive from M10+
-// EBITDA values (тыс. ₽): negative for early months (pilot + MVP burn), positive after
+<script>
+// PNL bars — pre-render server-side equivalent
 const ebitda = [
-  -625, -625, -625, -625,                // M1-4: пилот
-  -800, -200, 100, 250, 400, 550,         // M5-10: разработка MVP, выход
-  650, 750,                                // M11-12: окупаемость растёт
-  900, 1050, 1200, 1350, 1500, 1650,      // M13-18
-  1800, 1900, 2000, 2050, 2080, 2100,     // M19-24
-  2300, 2500, 2700, 2900, 3050, 3200,     // M25-30
-  3300, 3380, 3440, 3480, 3500, 3500      // M31-36
+  -625, -625, -625, -625,
+  -800, -200, 100, 250, 400, 550,
+  650, 750,
+  900, 1050, 1200, 1350, 1500, 1650,
+  1800, 1900, 2000, 2050, 2080, 2100,
+  2300, 2500, 2700, 2900, 3050, 3200,
+  3300, 3380, 3440, 3480, 3500, 3500
 ];
 const max = 3500, min = -800;
-const chart = document.getElementById('pnlChart');
 const totalRange = max - min;
+const zeroPct = -min / totalRange * 100;
+const chart = document.getElementById('pnlChart');
 ebitda.forEach((v, i) => {
   const bar = document.createElement('div');
   const isPos = v >= 0;
   bar.className = 'pnl-bar ' + (isPos ? (v > 1500 ? 'pos high' : 'pos') : 'neg');
-  // height proportional to abs value, positioned around zero line
-  const zeroPct = -min / totalRange * 100; // % from bottom where zero is
   if (isPos) {
     const h = (v / totalRange) * 100;
     bar.style.bottom = zeroPct + '%';
@@ -1302,13 +1111,10 @@ ebitda.forEach((v, i) => {
     bar.style.top = (100 - zeroPct) + '%';
     bar.style.height = h + '%';
   }
-  bar.style.position = 'absolute';
   bar.style.left = (i / 36 * 100) + '%';
   bar.style.width = (100 / 36 - 0.2) + '%';
-  bar.title = `М${i+1}: ${v > 0 ? '+' : ''}${v} тыс. ₽`;
   chart.appendChild(bar);
 });
-chart.style.position = 'relative';
 </script>
 </body>
 </html>
