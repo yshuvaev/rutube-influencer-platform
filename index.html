@@ -99,15 +99,19 @@ html, body {
 }
 .slide-footer strong { color: var(--text-dim); }
 .budget-tag {
-  display: inline-flex; align-items: center; gap: 6px;
+  display: inline-block;
   font-size: 9pt; font-weight: 700;
   border: 1px solid var(--accent);
   padding: 4px 10px; color: var(--accent);
   white-space: nowrap;
 }
 .budget-tag::before {
-  content: ''; width: 5px; height: 5px;
+  content: '';
+  display: inline-block;
+  width: 5px; height: 5px;
   border-radius: 50%; background: var(--accent);
+  margin-right: 6px;
+  vertical-align: middle;
 }
 
 /* ── COVER ── */
