@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<title>Гипотезы и бэклог · RuTube Influencer Platform</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface2: #1A1A1A;
+    --text: #F5F5F5;
+    --text-dim: #B0B0B0;
+    --text-muted: #8A8A8A;
+    --accent: #C8FF00;
+    --accent2: #00D9FF;
+    --amber: #FBBF24;
+    --grn: #4ADE80;
+    --red: #F87171;
+    --border: #1F1F1F;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.55; font-size: 16px;
+    padding: 48px 24px 96px;
+  }
+  .container { max-width: 820px; margin: 0 auto; }
+  .meta {
+    font-size: 12px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-size: 36px; font-weight: 900; letter-spacing: -0.025em;
+    line-height: 1.05; margin: 0 0 8px;
+  }
+  .lead {
+    font-size: 17px; color: var(--text-dim);
+    margin: 0 0 40px; padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  h2 {
+    font-size: 24px; font-weight: 800; letter-spacing: -0.015em;
+    margin: 48px 0 16px;
+  }
+  h3 {
+    font-size: 13px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--accent); margin: 28px 0 8px;
+  }
+  p { margin: 0 0 14px; color: var(--text); }
+  .muted { color: var(--text-muted); font-size: 14px; }
+  strong { color: var(--text); font-weight: 700; }
+  em { color: var(--accent2); font-style: normal; font-weight: 600; }
+
+  ul { margin: 0 0 16px; padding-left: 20px; }
+  ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; color: var(--text-dim); }
+  li strong { color: var(--text); }
+
+  table {
+    width: 100%; border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 13.5px;
+  }
+  th, td {
+    text-align: left; padding: 9px 10px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th {
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+  td.acc { color: var(--accent); font-weight: 700; }
+  td.center { text-align: center; }
+
+  .pull {
+    background: var(--surface); border-left: 3px solid var(--accent);
+    padding: 14px 18px; margin: 20px 0;
+    font-size: 15.5px; color: var(--text);
+  }
+  .pull strong { color: var(--accent); }
+
+  .hyp {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 18px 22px; margin: 14px 0;
+  }
+  .hyp-num {
+    display: inline-block;
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 0.12em; color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .hyp-title {
+    font-size: 16px; font-weight: 700; margin: 0 0 10px;
+    color: var(--text);
+  }
+  .hyp-row {
+    display: grid; grid-template-columns: 100px 1fr;
+    gap: 12px; padding: 6px 0; font-size: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .hyp-row:first-of-type { border-top: none; }
+  .hyp-row .lbl {
+    color: var(--text-muted); font-weight: 600;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .hyp-row .val { color: var(--text); }
+
+  .feat-cat {
+    display: grid; grid-template-columns: 110px 1fr;
+    gap: 14px; padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .feat-cat .cat {
+    font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--accent); padding-top: 2px;
+  }
+  .feat-cat .item strong { display: block; margin-bottom: 3px; }
+  .feat-cat .item span { color: var(--text-dim); font-size: 14px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .stat-card {
+    background: var(--surface); border-left: 3px solid var(--accent);
+    padding: 14px 16px;
+  }
+  .stat-card .num {
+    font-size: 22px; font-weight: 900; color: var(--accent);
+    letter-spacing: -0.02em; line-height: 1;
+  }
+  .stat-card .lbl {
+    font-size: 12px; color: var(--text-muted);
+    margin-top: 6px; line-height: 1.4;
+  }
+
+  a { color: var(--accent2); text-decoration: none; border-bottom: 1px dotted var(--accent2); }
+  a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .sources { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .sources li { font-size: 13px; }
+
+  @media (max-width: 700px) {
+    body { padding: 32px 16px 64px; font-size: 15px; }
+    .container { max-width: none; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 20px; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .feat-cat { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="meta">RuTube Influencer Platform · Майский апдейт 2026</div>
+<h1>Гипотезы пилота, бэклог фич и сравнение с TikTok&nbsp;Shop</h1>
+<p class="lead">Что конкретно мы строим, какие гипотезы проверяем в эксперименте, и почему именно сейчас — на сравнении с глобально доказанной моделью (TikTok Shop) и российскими marketplace-нативными альтернативами.</p>
+
+<div class="pull">
+<strong>Кратко.</strong> TikTok Shop за 2025 сделал $64,3 млрд GMV глобально и $15,1 млрд в США (+108% YoY) — модель «video → click → buy» доказана. В РФ её копируют WB Wibes / Ozon AdBlogger / Яндекс Ритм, но все в формате short-form внутри своего маркетплейса. <em>Long-form video-commerce для независимых брендов на RuTube</em> — пустая ниша, и это окно мы и проверяем.
+</div>
+
+<h2>Что предлагаем — в одной фразе</h2>
+<p>Performance-канал для independent брендов на единственной российской long-form video платформе. Бренд получает прозрачную атрибуцию продаж к собственному сайту через UTM + промокод + интеграцию с CMS, блогер получает CPA-модель оплаты с автоматическим расчётом через Тинькофф Самозанятые, платформа берёт фиксированную комиссию.</p>
+
+<h2>Три гипотезы, которые проверяем в эксперименте</h2>
+<p class="muted">Каждая — с конкретным порогом, по которому строится решение Go / Fix / Stop.</p>
+
+<div class="hyp">
+  <div class="hyp-num">ГИПОТЕЗА 1 · ЕСТЬ СПРОС</div>
+  <div class="hyp-title">Российские бренды готовы покупать performance-интеграции на RuTube long-form</div>
+  <div class="hyp-row"><span class="lbl">Метрика</span><span class="val">Conv лид → платящий бренд</span></div>
+  <div class="hyp-row"><span class="lbl">Целевой порог</span><span class="val">≥ 30% (15 из 50 outbound берут пилот)</span></div>
+  <div class="hyp-row"><span class="lbl">Замер</span><span class="val">месяц 2 эксперимента</span></div>
+  <div class="hyp-row"><span class="lbl">Stop-сигнал</span><span class="val">&lt; 15% — нет рынка / нет ценности оффера</span></div>
+</div>
+
+<div class="hyp">
+  <div class="hyp-num">ГИПОТЕЗА 2 · ЕСТЬ ЭКОНОМИКА</div>
+  <div class="hyp-title">Юнит-экономика custom-интеграций сходится для бренда</div>
+  <div class="hyp-row"><span class="lbl">Метрика</span><span class="val">ROMI бренда (доход − затраты) / затраты × 100%</span></div>
+  <div class="hyp-row"><span class="lbl">Целевой порог</span><span class="val">≥ 50% за 30 дней после публикации</span></div>
+  <div class="hyp-row"><span class="lbl">Замер</span><span class="val">месяц 3 эксперимента</span></div>
+  <div class="hyp-row"><span class="lbl">Stop-сигнал</span><span class="val">&lt; 20% — базовая интеграция убыточна, масштаб не поможет</span></div>
+</div>
+
+<div class="hyp">
+  <div class="hyp-num">ГИПОТЕЗА 3 · ЕСТЬ LTV</div>
+  <div class="hyp-title">Бренды возвращаются за повторными интеграциями</div>
+  <div class="hyp-row"><span class="lbl">Метрика</span><span class="val">Repeat Rate за 60 дней</span></div>
+  <div class="hyp-row"><span class="lbl">Целевой порог</span><span class="val">≥ 50% брендов делают вторую интеграцию</span></div>
+  <div class="hyp-row"><span class="lbl">Замер</span><span class="val">месяц 4 эксперимента</span></div>
+  <div class="hyp-row"><span class="lbl">Stop-сигнал</span><span class="val">&lt; 30% — нет повторов = нет LTV = модель не сходится в горизонте</span></div>
+</div>
+
+<h2>Бэклог фич</h2>
+
+<h3>MVP — то, что работает к концу эксперимента</h3>
+<div class="feat-cat">
+  <div class="cat">CRM</div>
+  <div class="item"><strong>Кабинет бренда</strong><span>Бриф (продукт, ICP, ЦА, KPI), шортлист блогеров, лайв-дашборд ROMI, кнопка «повторить кампанию»</span></div>
+</div>
+<div class="feat-cat">
+  <div class="cat">Каталог</div>
+  <div class="item"><strong>Каталог блогеров</strong><span>Внутренний для Influencer Manager. Поиск по тематике, метрикам, прецедентам. Бренд каталог не видит — отбор через шортлист</span></div>
+</div>
+<div class="feat-cat">
+  <div class="cat">Парсер</div>
+  <div class="item"><strong>Авто-pull скоринг RuTube</strong><span>Python + Selenium: ежедневный сбор метрик 500 каналов (subs, avg views, ER, retention) → tier распределение микро/средний/топ</span></div>
+</div>
+<div class="feat-cat">
+  <div class="cat">Tracking</div>
+  <div class="item"><strong>UTM + промокод инфраструктура</strong><span>Авто-генерация UTM на канал, привязка промокода к каналу, шаблон разметки в описании и закреплённом комментарии</span></div>
+</div>
+<div class="feat-cat">
+  <div class="cat">Аттрибуция</div>
+  <div class="item"><strong>CMS-интеграция бренда</strong><span>Webhook-интеграции с Bitrix, InSales, Tilda Magazin для real-time pull продаж по промокоду в кабинет</span></div>
+</div>
+<div class="feat-cat">
+  <div class="cat">Документы</div>
+  <div class="item"><strong>ЭДО + Самозанятые API</strong><span>Контур.Диадок для договоров с брендами, Тинькофф Самозанятые API для авто-выплат блогерам после публикации</span></div>
+</div>
+<div class="feat-cat">
+  <div class="cat">Дашборд</div>
+  <div class="item"><strong>Performance-кабинет</strong><span>Real-time переходы, использования промокода, продажи, ROMI, CPA. Привязано к каждой интеграции отдельно</span></div>
+</div>
+<div class="feat-cat">
+  <div class="cat">Workflow</div>
+  <div class="item"><strong>Producer flow</strong><span>Загрузка превью блогером, проверка соответствия брифу, утверждение брендом, публикация. Чат бренд-блогер блокирован, всё через Producer</span></div>
+</div>
+
+<h3>Post-MVP — добавляется при сценарии Go</h3>
+<div class="feat-cat">
+  <div class="cat">Widget</div>
+  <div class="item"><strong>Overlay на evergreen-видео</strong><span>Когда RuTube откроет partnership API. Trackable-разметка автоматически навешивается на 15-20 «вечнозелёных» видео валидированных блогеров</span></div>
+</div>
+<div class="feat-cat">
+  <div class="cat">ML</div>
+  <div class="item"><strong>Авто-шортлист по брифу</strong><span>На исторических данных: какие пары блогер↔бренд показали ROMI ≥50%. ML-модель ранжирует кандидатов под новый бриф</span></div>
+</div>
+<div class="feat-cat">
+  <div class="cat">Multi</div>
+  <div class="item"><strong>Кампании пакетами</strong><span>Управление 10+ кампаниями одновременно для крупных брендов: общий бюджет, multi-blogger ABT, корпоративная отчётность</span></div>
+</div>
+<div class="feat-cat">
+  <div class="cat">Live</div>
+  <div class="item"><strong>Live shopping (опционально)</strong><span>Если RuTube введёт стримы с трекингом — добавляем формат прямой эфир + промокод. Это уже территория TikTok Shop, оценим спрос на длинной дистанции</span></div>
+</div>
+
+<h2>Сравнение с TikTok&nbsp;Shop и российскими игроками</h2>
+
+<p>TikTok Shop — глобально доказанная модель video-commerce. Все российские маркетплейсы её копируют, но в short-form-формате внутри своих экосистем. RuTube long-form для независимых брендов — отдельная незанятая ниша.</p>
+
+<div class="grid-2">
+  <div class="stat-card">
+    <div class="num">$64,3 млрд</div>
+    <div class="lbl">GMV TikTok Shop глобально, 2025 (+93% YoY)</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">$15,1 млрд</div>
+    <div class="lbl">GMV TikTok Shop в США, 2025 (+108% YoY с $7,3 млрд в 2024)</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">15,4 млн</div>
+    <div class="lbl">Активных influencer'ов в TikTok Shop США</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">803,5 тыс</div>
+    <div class="lbl">Магазинов в TikTok Shop США</div>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Игрок</th>
+      <th>Формат</th>
+      <th>Куда продаёт</th>
+      <th>Бизнес-модель</th>
+      <th>Тип</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>TikTok Shop</strong></td>
+      <td>short-form</td>
+      <td>в TikTok</td>
+      <td>commission + ads</td>
+      <td>walled garden</td>
+    </tr>
+    <tr>
+      <td><strong>WB Wibes</strong></td>
+      <td>short-form (90 сек)</td>
+      <td>в Wildberries</td>
+      <td>10% маркетплейс + 5% блогеру</td>
+      <td>walled garden</td>
+    </tr>
+    <tr>
+      <td><strong>Ozon AdBlogger / VK</strong></td>
+      <td>short-form clips</td>
+      <td>в Ozon</td>
+      <td>CPA</td>
+      <td>walled garden</td>
+    </tr>
+    <tr>
+      <td><strong>Яндекс Ритм</strong></td>
+      <td>short-form</td>
+      <td>в Яндекс Маркет</td>
+      <td>CPA + ads</td>
+      <td>walled garden</td>
+    </tr>
+    <tr>
+      <td><strong>Getblogger / Epicstars</strong></td>
+      <td>mixed YT/IG</td>
+      <td>любой канал</td>
+      <td>сервис</td>
+      <td>independent</td>
+    </tr>
+    <tr style="background: var(--surface);">
+      <td class="acc"><strong>Мы</strong></td>
+      <td class="acc"><strong>long-form</strong></td>
+      <td class="acc"><strong>на сайт бренда</strong></td>
+      <td class="acc"><strong>20% commission</strong></td>
+      <td class="acc"><strong>independent</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Уникальное пересечение:</strong> long-form + independent + performance-канал. Этого нет ни у одного из игроков.</p>
+
+<h3>Чем модель отличается от TikTok Shop по существу</h3>
+<ul>
+  <li><strong>Тип покупки.</strong> TikTok Shop = impulse purchase на 60 секундах (модно — кликнул). Мы = research-driven purchase в 10-минутном обзоре (увидел в работе — пошёл изучить — купил). Разный CR (TikTok 1-3%, обзоры 5-12%), разный AOV (TikTok ~$30, обзорная категория ~$80-200).</li>
+  <li><strong>Кто получает деньги.</strong> TikTok Shop забирает commission себе. Мы оставляем 80% бренду на его сайте + 5-15% ему через сэкономленную маржу маркетплейса. Бренд платит блогеру через нас.</li>
+  <li><strong>Walled garden vs independent.</strong> В TikTok Shop / Wibes / AdBlogger / Ритме продажа происходит внутри их экосистемы — бренд теряет владение клиентом. У нас продажа на сайте бренда — full LTV, retargeting, customer data остаются у бренда.</li>
+  <li><strong>Категории.</strong> TikTok Shop сильнее всего в beauty ($2,5 млрд из $11+ млрд = 22%) и низком чеке. Long-form обзоры сильнее в electronics, home, education, automotive — категории с высоким AOV и долгой воронкой.</li>
+</ul>
+
+<h2>Почему именно сейчас</h2>
+
+<ol>
+  <li><strong>Модель глобально доказана.</strong> TikTok Shop в США — с $7,3 до $15,1 млрд за 2024 → 2025. В РФ её аналоги (Wibes / AdBlogger / Ритм) запущены в 2025, но все в short-form. Long-form video-commerce — пустая ниша.</li>
+  <li><strong>Перетекание рекламных бюджетов.</strong> С 01.09.2025 заблокирован Instagram для рекламы — около 11,6 млрд ₽ ищут новый канал.</li>
+  <li><strong>Аудитория RuTube выросла за год в 1,17x по MAU.</strong> На декабрь 2025 — 85 млн MAU. Прогноз на 2026 — 102 млн.</li>
+  <li><strong>Рынок интеграций растёт +128% YoY.</strong> Объём рекламы у блогеров RuTube 2024→2025 вырос с 250 до 570 млн ₽ (Kokoc Group).</li>
+  <li><strong>Окно 12-18 месяцев.</strong> ГПМХ ведёт RuTube к собственному BrandConnect-аналогу, запуск ожидается в 2027. До этого момента независимая платформа имеет окно для базы кейсов и партнёрской переговорной позиции.</li>
+</ol>
+
+<h2>Что мы НЕ делаем</h2>
+<p>Это столь же важно, как и что делаем — отсекает ложные сравнения.</p>
+<ul>
+  <li><strong>Не делаем walled garden.</strong> Не строим свою e-commerce витрину, не забираем продажу к себе. Всё на сайт бренда.</li>
+  <li><strong>Не делаем short-form.</strong> Reels/Shorts формат уже занят (Wibes, AdBlogger, Ритм, Клипы ВК). Мы — long-form, единственная свободная ниша.</li>
+  <li><strong>Не работаем с топ-1% блогерами.</strong> Они эксклюзивно у Wildjam / Yoola / IMA Group. Мы — микро и средний (10K-500K).</li>
+  <li><strong>Не делаем брендовый ad-server.</strong> Мы performance-channel. Охватная реклама у блогеров — это не наш продукт.</li>
+  <li><strong>Не делаем агентскую модель.</strong> Мы платформа, не сервис. Маржа 20% (а не 30-50% как у performance-агентств), масштаб через автоматизацию.</li>
+</ul>
+
+<div class="sources">
+<h2>Источники</h2>
+<ul>
+  <li><a href="https://thelowdown.momentum.asia/new-report-tiktok-shop-u-s-gmv-grew-68-to-reach-us15-1b-in-2025/" target="_blank">Momentum Works — TikTok Shop US GMV $15,1 млрд в 2025 (+68%)</a></li>
+  <li><a href="https://awisee.com/blog/tiktok-shop-statistics/" target="_blank">Awisee — TikTok Shop Statistics 2025</a></li>
+  <li><a href="https://marketingltb.com/blog/statistics/tiktok-shop-statistics/" target="_blank">Marketing LTB — TikTok Shop GMV by country</a></li>
+  <li><a href="https://www.forbes.ru/novosti-kompaniy/532461-wildberries-zapustila-videoplatformu-dla-pokupatelej-prodavcov-i-blogerov" target="_blank">Forbes — WB Wibes запуск</a></li>
+  <li><a href="https://www.vedomosti.ru/business/news/2025/04/17/1105032-wildberries-zapustil" target="_blank">Ведомости — Wibes монетизация для блогеров</a></li>
+  <li><a href="https://adindex.ru/news/digital/2025/10/1/337558.phtml" target="_blank">AdIndex — Ozon AdBlogger в VK</a></li>
+  <li><a href="https://adv.yandex.ru/news/novyj-servis-yandex-rythm" target="_blank">Яндекс Реклама — Ритм</a></li>
+  <li><a href="https://adpass.ru/rutube-viplatil-blogeram-poltora-yarda-za-rekalmu/" target="_blank">ADPASS — RuTube выплатил блогерам 1,5 млрд ₽ в 2025</a></li>
+  <li><a href="https://www.intellinews.com/russia-s-wildberries-ozon-growth-slows-as-marketplace-dominance-reaches-77-439553/" target="_blank">Intellinews — WB+Ozon 77% e-com РФ</a></li>
+</ul>
+</div>
+
+</div>
+</body>
+</html>
