@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<title>Ответы на вопросы · RuTube Influencer Platform</title>
+<style>
+:root {
+  --bg: #0A0A0A;
+  --surface: #141414;
+  --text: #F5F5F5;
+  --text-dim: #B0B0B0;
+  --text-muted: #707070;
+  --accent: #C8FF00;
+  --accent2: #00D9FF;
+  --amber: #FBBF24;
+  --border: #1F1F1F;
+  --border2: #2A2A2A;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg); color: var(--text);
+  height: 100vh; overflow: hidden;
+}
+.app { position: relative; width: 100vw; height: 100vh; display: flex; flex-direction: column; }
+
+.progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: var(--border2); z-index: 10; }
+.progress-fill { height: 100%; background: var(--accent); transition: width 0.3s; }
+
+.deck { position: relative; flex: 1; overflow: hidden; }
+.slide {
+  position: absolute; inset: 0;
+  padding: 56px 64px 130px;
+  display: flex; flex-direction: column; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.slide.active { opacity: 1; pointer-events: auto; }
+
+.page-num {
+  position: absolute; top: 22px; right: 30px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.16em; color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+h1 { font-size: 64px; font-weight: 900; letter-spacing: -0.04em; line-height: 0.92; margin: 0; }
+h2 { font-size: 32px; font-weight: 900; letter-spacing: -0.025em; margin: 0 0 16px; }
+
+.label {
+  font-size: 11px; font-weight: 800;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 12px;
+}
+
+.cover-content { max-width: 900px; }
+.cover-content h2 { font-size: 18px; color: var(--text-dim); font-weight: 600; margin-top: 16px; }
+.badge {
+  display: inline-block; align-self: flex-start;
+  border: 1px solid var(--accent); color: var(--accent);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 7px 16px; margin-bottom: 32px;
+}
+
+.slide-content { display: flex; flex-direction: column; gap: 12px; max-width: 900px; margin: 0 auto; }
+.svg-frame {
+  background: var(--surface); border: 1px solid var(--border2);
+  padding: 18px; border-radius: 8px;
+}
+.svg-frame svg { width: 100%; height: auto; max-height: 380px; }
+
+.controls {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: 64px; background: rgba(10,10,10,0.95);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  gap: 24px; z-index: 5; backdrop-filter: blur(12px);
+}
+.btn {
+  background: transparent; border: 1px solid var(--border2);
+  color: var(--text); padding: 9px 18px;
+  font-family: inherit; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.15s;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; color: var(--text-muted); letter-spacing: 0.1em;
+}
+
+.overlay {
+  position: fixed; inset: 0; background: rgba(10,10,10,0.96);
+  z-index: 100; display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 28px;
+}
+.overlay.hidden { display: none; }
+.overlay-title { font-size: 36px; font-weight: 900; letter-spacing: -0.02em; max-width: 720px; text-align: center; line-height: 1.1; }
+.overlay-sub { font-size: 15px; color: var(--text-dim); max-width: 600px; text-align: center; line-height: 1.55; }
+.overlay-btn {
+  background: var(--accent); color: var(--bg); border: none;
+  padding: 16px 32px; font-family: inherit;
+  font-size: 13px; font-weight: 800;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .slide { padding: 30px 20px 110px; }
+  h1 { font-size: 40px; }
+  h2 { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay">
+  <div class="overlay-title">Ответы на вопросы инвесторов</div>
+  <div class="overlay-sub">16 слайдов с озвучкой и схемами. Простым языком, со схемами и расшифровками. ~10 минут.</div>
+  <button class="overlay-btn" id="startBtn">Начать ▶</button>
+</div>
+
+<div class="progress"><div class="progress-fill" id="progress"></div></div>
+
+<div class="app">
+  <div class="deck" id="deck">
+    <section class="slide" data-idx="0">
+      <div class="page-num">1 / 16</div>
+      
+        <div class="cover-content">
+          <div class="badge">Презентация · ответы на вопросы</div>
+          <h1>RuTube Influencer Platform</h1>
+          <h2>Ответы на вопросы — простыми словами</h2>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-01.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="1">
+      <div class="page-num">2 / 16</div>
+      
+        <div class="slide-content">
+          <div class="label">Суть в одной фразе</div>
+          <h2>Что мы предлагаем</h2>
+          <div class="svg-frame"><svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <text x="300" y="30" font-family="Inter" font-size="14" font-weight="800" fill="#F5F5F5" text-anchor="middle">Что мы предлагаем — простыми словами</text>
+      <g font-family="Inter">
+        <rect x="60" y="60" width="480" height="180" rx="8" fill="#141414" stroke="#C8FF00" stroke-width="2"/>
+        <text x="300" y="90" font-size="13" fill="#F5F5F5" text-anchor="middle">Это маркетплейс между брендами</text>
+        <text x="300" y="110" font-size="13" fill="#F5F5F5" text-anchor="middle">и блогерами RuTube,</text>
+        <text x="300" y="135" font-size="14" font-weight="800" fill="#C8FF00" text-anchor="middle">в котором продажа происходит</text>
+        <text x="300" y="155" font-size="14" font-weight="800" fill="#C8FF00" text-anchor="middle">на сайте бренда,</text>
+        <text x="300" y="180" font-size="13" fill="#F5F5F5" text-anchor="middle">а мы видим её через метку в ссылке</text>
+        <text x="300" y="200" font-size="13" fill="#F5F5F5" text-anchor="middle">и считаем выплату блогеру и комиссию.</text>
+
+        <text x="300" y="225" font-size="11" fill="#FBBF24" text-anchor="middle">Главное отличие от Wibes/Ozon/Ритм —</text>
+        <text x="300" y="240" font-size="11" font-weight="800" fill="#FBBF24" text-anchor="middle">мы НЕ забираем продажу к себе. Бренд оставляет всю маржу.</text>
+      </g>
+    </svg></div>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-02.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="2">
+      <div class="page-num">3 / 16</div>
+      
+        <div class="slide-content">
+          <div class="label">Взгляд от выхода, а не от старта</div>
+          <h2>Что мы получим за 3 года</h2>
+          <div class="svg-frame"><svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <text x="300" y="25" font-family="Inter" font-size="13" font-weight="800" fill="#F5F5F5" text-anchor="middle">Что мы строим (взгляд от выхода)</text>
+      <g font-family="Inter">
+        <rect x="60" y="55" width="480" height="80" rx="6" fill="#1A2810" stroke="#C8FF00" stroke-width="2"/>
+        <text x="300" y="82" font-size="13" font-weight="800" fill="#C8FF00" text-anchor="middle">К Году 3 — единственный игрок в РФ</text>
+        <text x="300" y="105" font-size="12" fill="#F5F5F5" text-anchor="middle">на пересечении длинных обзоров RuTube</text>
+        <text x="300" y="122" font-size="12" fill="#F5F5F5" text-anchor="middle">и независимых брендов с собственным сайтом</text>
+
+        <rect x="20" y="155" width="170" height="100" rx="4" fill="#141414" stroke="#FBBF24"/>
+        <text x="105" y="178" font-size="11" font-weight="800" fill="#FBBF24" text-anchor="middle">~3 МЛРД ₽</text>
+        <text x="105" y="200" font-size="10" fill="#B0B0B0" text-anchor="middle">оценка проекта</text>
+        <text x="105" y="215" font-size="10" fill="#B0B0B0" text-anchor="middle">по ставке 20%</text>
+        <text x="105" y="240" font-size="11" fill="#F5F5F5" text-anchor="middle">оценка через 3 года</text>
+
+        <rect x="200" y="155" width="200" height="100" rx="4" fill="#141414" stroke="#FBBF24"/>
+        <text x="300" y="178" font-size="11" font-weight="800" fill="#FBBF24" text-anchor="middle">~30 МЛРД ₽</text>
+        <text x="300" y="200" font-size="10" fill="#B0B0B0" text-anchor="middle">сделок через платформу</text>
+        <text x="300" y="215" font-size="10" fill="#B0B0B0" text-anchor="middle">за третий год работы</text>
+        <text x="300" y="240" font-size="11" fill="#F5F5F5" text-anchor="middle">оборот к Году 3</text>
+
+        <rect x="410" y="155" width="170" height="100" rx="4" fill="#141414" stroke="#FBBF24"/>
+        <text x="495" y="178" font-size="11" font-weight="800" fill="#FBBF24" text-anchor="middle">~38 МЛН ₽</text>
+        <text x="495" y="200" font-size="10" fill="#B0B0B0" text-anchor="middle">накопленная</text>
+        <text x="495" y="215" font-size="10" fill="#B0B0B0" text-anchor="middle">чистая прибыль</text>
+        <text x="495" y="240" font-size="11" fill="#F5F5F5" text-anchor="middle">за 3 года</text>
+      </g>
+    </svg></div>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-03.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="3">
+      <div class="page-num">4 / 16</div>
+      
+        <div class="slide-content">
+          <div class="label">Зритель → блогер → бренд</div>
+          <h2>Где происходит сделка</h2>
+          <div class="svg-frame"><svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="100" width="120" height="80" rx="6" fill="#141414" stroke="#C8FF00" stroke-width="2"/>
+      <text x="70" y="135" font-family="Inter" font-size="13" font-weight="700" fill="#F5F5F5" text-anchor="middle">ЗРИТЕЛЬ</text>
+      <text x="70" y="158" font-family="Inter" font-size="11" fill="#B0B0B0" text-anchor="middle">смотрит видео</text>
+      <text x="70" y="172" font-family="Inter" font-size="11" fill="#B0B0B0" text-anchor="middle">на RuTube</text>
+
+      <path d="M 130 140 L 175 140" stroke="#C8FF00" stroke-width="2" stroke-dasharray="4 3"/>
+      <polygon points="175,135 185,140 175,145" fill="#C8FF00"/>
+
+      <rect x="190" y="100" width="120" height="80" rx="6" fill="#141414" stroke="#C8FF00" stroke-width="2"/>
+      <text x="250" y="130" font-family="Inter" font-size="11" font-weight="700" fill="#C8FF00" text-anchor="middle">ОБЗОР БЛОГЕРА</text>
+      <text x="250" y="150" font-family="Inter" font-size="10" fill="#B0B0B0" text-anchor="middle">+ ссылка с меткой</text>
+      <text x="250" y="165" font-family="Inter" font-size="10" fill="#B0B0B0" text-anchor="middle">+ промокод -10%</text>
+
+      <path d="M 310 140 L 355 140" stroke="#C8FF00" stroke-width="2" stroke-dasharray="4 3"/>
+      <polygon points="355,135 365,140 355,145" fill="#C8FF00"/>
+
+      <rect x="370" y="100" width="120" height="80" rx="6" fill="#141414" stroke="#C8FF00" stroke-width="2"/>
+      <text x="430" y="130" font-family="Inter" font-size="13" font-weight="700" fill="#F5F5F5" text-anchor="middle">САЙТ БРЕНДА</text>
+      <text x="430" y="152" font-family="Inter" font-size="11" fill="#B0B0B0" text-anchor="middle">оплата здесь</text>
+      <text x="430" y="166" font-family="Inter" font-size="11" fill="#C8FF00" text-anchor="middle">сделка ✓</text>
+
+      <text x="300" y="40" font-family="Inter" font-size="12" font-weight="800" fill="#FBBF24" text-anchor="middle" letter-spacing="2">СДЕЛКА ПРОИСХОДИТ НА САЙТЕ БРЕНДА</text>
+      <text x="300" y="60" font-family="Inter" font-size="11" fill="#B0B0B0" text-anchor="middle">не на маркетплейсе и не у нас на платформе</text>
+
+      <rect x="190" y="220" width="220" height="40" rx="4" fill="#141414" stroke="#2A2A2A"/>
+      <text x="300" y="237" font-family="Inter" font-size="11" font-weight="700" fill="#C8FF00" text-anchor="middle">мы видим продажу через UTM-метку</text>
+      <text x="300" y="252" font-family="Inter" font-size="10" fill="#B0B0B0" text-anchor="middle">и считаем выплаты блогеру и комиссию</text>
+    </svg></div>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-04.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="4">
+      <div class="page-num">5 / 16</div>
+      
+        <div class="slide-content">
+          <div class="label">По мере ввода продуктов 1 и 2</div>
+          <h2>Доля рынка по годам</h2>
+          <div class="svg-frame"><svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <text x="300" y="30" font-family="Inter" font-size="13" font-weight="800" fill="#F5F5F5" text-anchor="middle">Доля рынка влогер-интеграций RuTube</text>
+
+      <line x1="60" y1="240" x2="540" y2="240" stroke="#2A2A2A" stroke-width="1"/>
+      <line x1="60" y1="60" x2="60" y2="240" stroke="#2A2A2A" stroke-width="1"/>
+
+      <text x="100" y="260" font-family="Inter" font-size="11" fill="#B0B0B0">Год 1</text>
+      <text x="240" y="260" font-family="Inter" font-size="11" fill="#B0B0B0">Год 2</text>
+      <text x="380" y="260" font-family="Inter" font-size="11" fill="#B0B0B0">Год 3</text>
+
+      <rect x="80" y="220" width="60" height="20" rx="2" fill="#C8FF00"/>
+      <text x="110" y="234" font-family="Inter" font-size="11" font-weight="800" fill="#0A0A0A" text-anchor="middle">3%</text>
+      <text x="110" y="210" font-family="Inter" font-size="10" fill="#B0B0B0" text-anchor="middle">~50 М ₽/мес</text>
+
+      <rect x="220" y="160" width="60" height="80" rx="2" fill="#C8FF00"/>
+      <text x="250" y="205" font-family="Inter" font-size="13" font-weight="800" fill="#0A0A0A" text-anchor="middle">10%</text>
+      <text x="250" y="150" font-family="Inter" font-size="10" fill="#B0B0B0" text-anchor="middle">~250 М ₽/мес</text>
+
+      <rect x="360" y="80" width="60" height="160" rx="2" fill="#C8FF00"/>
+      <text x="390" y="170" font-family="Inter" font-size="14" font-weight="800" fill="#0A0A0A" text-anchor="middle">20%</text>
+      <text x="390" y="70" font-family="Inter" font-size="10" fill="#B0B0B0" text-anchor="middle">~700 М ₽/мес</text>
+
+      <rect x="465" y="60" width="80" height="180" rx="2" fill="none" stroke="#FBBF24" stroke-width="2" stroke-dasharray="4 3"/>
+      <text x="505" y="50" font-family="Inter" font-size="10" fill="#FBBF24" text-anchor="middle">потенциал</text>
+      <text x="505" y="155" font-family="Inter" font-size="11" font-weight="800" fill="#FBBF24" text-anchor="middle">3,5 млрд</text>
+      <text x="505" y="170" font-family="Inter" font-size="10" fill="#B0B0B0" text-anchor="middle">весь рынок</text>
+    </svg></div>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-05.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="5">
+      <div class="page-num">6 / 16</div>
+      
+        <div class="slide-content">
+          <div class="label">Выигрывают все стороны</div>
+          <h2>Кому это выгодно</h2>
+          <div class="svg-frame"><svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(20, 30)">
+        <rect width="170" height="110" rx="6" fill="#141414" stroke="#C8FF00" stroke-width="1"/>
+        <text x="85" y="25" font-family="Inter" font-size="11" font-weight="800" fill="#C8FF00" text-anchor="middle" letter-spacing="2">ЗРИТЕЛЬ</text>
+        <text x="20" y="50" font-family="Inter" font-size="11" fill="#F5F5F5">Релевантные обзоры</text>
+        <text x="20" y="68" font-family="Inter" font-size="11" fill="#F5F5F5">Скидка по промокоду</text>
+        <text x="20" y="86" font-family="Inter" font-size="11" fill="#F5F5F5">Безопасная сделка</text>
+        <text x="20" y="104" font-family="Inter" font-size="11" fill="#F5F5F5">на сайте бренда</text>
+      </g>
+
+      <g transform="translate(210, 30)">
+        <rect width="170" height="110" rx="6" fill="#141414" stroke="#00D9FF" stroke-width="1"/>
+        <text x="85" y="25" font-family="Inter" font-size="11" font-weight="800" fill="#00D9FF" text-anchor="middle" letter-spacing="2">БЛОГЕР</text>
+        <text x="20" y="50" font-family="Inter" font-size="11" fill="#F5F5F5">Поток заказов</text>
+        <text x="20" y="68" font-family="Inter" font-size="11" fill="#F5F5F5">Авто-выплаты</text>
+        <text x="20" y="86" font-family="Inter" font-size="11" fill="#F5F5F5">за 15 минут</text>
+        <text x="20" y="104" font-family="Inter" font-size="11" fill="#F5F5F5">Рейтинг растёт</text>
+      </g>
+
+      <g transform="translate(400, 30)">
+        <rect width="170" height="110" rx="6" fill="#141414" stroke="#FBBF24" stroke-width="1"/>
+        <text x="85" y="25" font-family="Inter" font-size="11" font-weight="800" fill="#FBBF24" text-anchor="middle" letter-spacing="2">БРЕНД</text>
+        <text x="20" y="50" font-family="Inter" font-size="11" fill="#F5F5F5">Продажа на свой</text>
+        <text x="20" y="68" font-family="Inter" font-size="11" fill="#F5F5F5">сайт, не маркетплейс</text>
+        <text x="20" y="86" font-family="Inter" font-size="11" fill="#F5F5F5">Вся маржа сохраняется</text>
+        <text x="20" y="104" font-family="Inter" font-size="11" fill="#F5F5F5">Видит ROI в кабинете</text>
+      </g>
+
+      <g transform="translate(110, 160)">
+        <rect width="180" height="100" rx="6" fill="#141414" stroke="#4ADE80" stroke-width="1"/>
+        <text x="90" y="25" font-family="Inter" font-size="11" font-weight="800" fill="#4ADE80" text-anchor="middle" letter-spacing="2">RUTUBE / ГПМХ</text>
+        <text x="20" y="50" font-family="Inter" font-size="11" fill="#F5F5F5">Рост рекламных</text>
+        <text x="20" y="68" font-family="Inter" font-size="11" fill="#F5F5F5">доходов блогеров</text>
+        <text x="20" y="86" font-family="Inter" font-size="11" fill="#F5F5F5">Удержание контента</text>
+      </g>
+
+      <g transform="translate(310, 160)">
+        <rect width="180" height="100" rx="6" fill="#141414" stroke="#F87171" stroke-width="1"/>
+        <text x="90" y="25" font-family="Inter" font-size="11" font-weight="800" fill="#F87171" text-anchor="middle" letter-spacing="2">МЫ (ПЛАТФОРМА)</text>
+        <text x="20" y="50" font-family="Inter" font-size="11" fill="#F5F5F5">Комиссия 20%</text>
+        <text x="20" y="68" font-family="Inter" font-size="11" fill="#F5F5F5">с каждой сделки</text>
+        <text x="20" y="86" font-family="Inter" font-size="11" fill="#F5F5F5">+ платежи за объём</text>
+      </g>
+    </svg></div>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-06.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="6">
+      <div class="page-num">7 / 16</div>
+      
+        <div class="slide-content">
+          <div class="label">Зрители, блогеры, бренды</div>
+          <h2>Рост по годам</h2>
+          <div class="svg-frame"><svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <text x="300" y="25" font-family="Inter" font-size="13" font-weight="800" fill="#F5F5F5" text-anchor="middle">Рост по годам (накопленная база)</text>
+      <line x1="60" y1="240" x2="540" y2="240" stroke="#2A2A2A"/>
+      <line x1="60" y1="50" x2="60" y2="240" stroke="#2A2A2A"/>
+
+      <text x="120" y="260" font-family="Inter" font-size="11" fill="#B0B0B0" text-anchor="middle">Год 1</text>
+      <text x="280" y="260" font-family="Inter" font-size="11" fill="#B0B0B0" text-anchor="middle">Год 2</text>
+      <text x="440" y="260" font-family="Inter" font-size="11" fill="#B0B0B0" text-anchor="middle">Год 3</text>
+
+      <polyline points="120,220 280,180 440,140" fill="none" stroke="#C8FF00" stroke-width="3"/>
+      <circle cx="120" cy="220" r="5" fill="#C8FF00"/>
+      <circle cx="280" cy="180" r="5" fill="#C8FF00"/>
+      <circle cx="440" cy="140" r="6" fill="#C8FF00"/>
+
+      <polyline points="120,228 280,200 440,168" fill="none" stroke="#00D9FF" stroke-width="3"/>
+      <circle cx="120" cy="228" r="4" fill="#00D9FF"/>
+      <circle cx="280" cy="200" r="5" fill="#00D9FF"/>
+      <circle cx="440" cy="168" r="5" fill="#00D9FF"/>
+
+      <polyline points="120,235 280,215 440,190" fill="none" stroke="#FBBF24" stroke-width="3"/>
+      <circle cx="120" cy="235" r="4" fill="#FBBF24"/>
+      <circle cx="280" cy="215" r="4" fill="#FBBF24"/>
+      <circle cx="440" cy="190" r="5" fill="#FBBF24"/>
+
+      <text x="100" y="215" font-family="Inter" font-size="9" fill="#C8FF00">25</text>
+      <text x="265" y="175" font-family="Inter" font-size="9" fill="#C8FF00">120</text>
+      <text x="425" y="135" font-family="Inter" font-size="9" fill="#C8FF00">350</text>
+
+      <text x="100" y="248" font-family="Inter" font-size="9" fill="#00D9FF">8</text>
+      <text x="265" y="195" font-family="Inter" font-size="9" fill="#00D9FF">35</text>
+      <text x="425" y="163" font-family="Inter" font-size="9" fill="#00D9FF">100</text>
+
+      <text x="100" y="252" font-family="Inter" font-size="9" fill="#FBBF24">3</text>
+      <text x="265" y="210" font-family="Inter" font-size="9" fill="#FBBF24">15</text>
+      <text x="425" y="185" font-family="Inter" font-size="9" fill="#FBBF24">50</text>
+
+      <g transform="translate(440, 60)">
+        <circle cx="6" cy="6" r="5" fill="#C8FF00"/><text x="16" y="10" font-family="Inter" font-size="11" fill="#F5F5F5">блогеры (тыс.)</text>
+        <circle cx="6" cy="26" r="5" fill="#00D9FF"/><text x="16" y="30" font-family="Inter" font-size="11" fill="#F5F5F5">бренды (шт.)</text>
+        <circle cx="6" cy="46" r="5" fill="#FBBF24"/><text x="16" y="50" font-family="Inter" font-size="11" fill="#F5F5F5">сделок/мес (тыс.)</text>
+      </g>
+    </svg></div>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-07.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="7">
+      <div class="page-num">8 / 16</div>
+      
+        <div class="slide-content">
+          <div class="label">От обзора до покупки и повтора</div>
+          <h2>Путь зрителя</h2>
+          <div class="svg-frame"><svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <text x="300" y="25" font-family="Inter" font-size="13" font-weight="800" fill="#F5F5F5" text-anchor="middle">Путь зрителя</text>
+      <g font-family="Inter">
+        <rect x="20" y="80" width="100" height="80" rx="6" fill="#141414" stroke="#C8FF00"/>
+        <text x="70" y="100" font-size="10" font-weight="800" fill="#C8FF00" text-anchor="middle">1. СМОТРИТ</text>
+        <text x="70" y="125" font-size="10" fill="#F5F5F5" text-anchor="middle">Обзор любимого</text>
+        <text x="70" y="140" font-size="10" fill="#F5F5F5" text-anchor="middle">блогера</text>
+
+        <path d="M 120 120 L 138 120" stroke="#C8FF00" stroke-width="2"/>
+        <polygon points="138,116 145,120 138,124" fill="#C8FF00"/>
+
+        <rect x="148" y="80" width="100" height="80" rx="6" fill="#141414" stroke="#C8FF00"/>
+        <text x="198" y="100" font-size="10" font-weight="800" fill="#C8FF00" text-anchor="middle">2. ЗАИНТЕРЕСОВАН</text>
+        <text x="198" y="125" font-size="10" fill="#F5F5F5" text-anchor="middle">Видит продукт</text>
+        <text x="198" y="140" font-size="10" fill="#F5F5F5" text-anchor="middle">+ промокод</text>
+
+        <path d="M 248 120 L 266 120" stroke="#C8FF00" stroke-width="2"/>
+        <polygon points="266,116 273,120 266,124" fill="#C8FF00"/>
+
+        <rect x="276" y="80" width="100" height="80" rx="6" fill="#141414" stroke="#C8FF00"/>
+        <text x="326" y="100" font-size="10" font-weight="800" fill="#C8FF00" text-anchor="middle">3. ПЕРЕХОДИТ</text>
+        <text x="326" y="125" font-size="10" fill="#F5F5F5" text-anchor="middle">По ссылке из</text>
+        <text x="326" y="140" font-size="10" fill="#F5F5F5" text-anchor="middle">описания</text>
+
+        <path d="M 376 120 L 394 120" stroke="#C8FF00" stroke-width="2"/>
+        <polygon points="394,116 401,120 394,124" fill="#C8FF00"/>
+
+        <rect x="404" y="80" width="100" height="80" rx="6" fill="#141414" stroke="#C8FF00"/>
+        <text x="454" y="100" font-size="10" font-weight="800" fill="#C8FF00" text-anchor="middle">4. ПОКУПАЕТ</text>
+        <text x="454" y="125" font-size="10" fill="#F5F5F5" text-anchor="middle">На сайте бренда</text>
+        <text x="454" y="140" font-size="10" fill="#F5F5F5" text-anchor="middle">со скидкой 10%</text>
+      </g>
+
+      <g transform="translate(200, 200)" font-family="Inter">
+        <rect width="200" height="60" rx="6" fill="#141414" stroke="#FBBF24"/>
+        <text x="100" y="22" font-size="10" font-weight="800" fill="#FBBF24" text-anchor="middle">5. ВОЗВРАТ ИЛИ ПОВТОР</text>
+        <text x="100" y="42" font-size="10" fill="#F5F5F5" text-anchor="middle">Через 14 дней — финальный замер</text>
+        <text x="100" y="55" font-size="10" fill="#F5F5F5" text-anchor="middle">платёж блогеру и комиссия нам</text>
+      </g>
+    </svg></div>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-08.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="8">
+      <div class="page-num">9 / 16</div>
+      
+        <div class="slide-content">
+          <div class="label">От заявки до повторной кампании</div>
+          <h2>Путь бренда</h2>
+          <div class="svg-frame"><svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <text x="300" y="25" font-family="Inter" font-size="13" font-weight="800" fill="#F5F5F5" text-anchor="middle">Путь бренда</text>
+      <g font-family="Inter" font-size="10">
+        <rect x="15" y="60" width="110" height="60" rx="4" fill="#141414" stroke="#C8FF00"/>
+        <text x="70" y="80" font-weight="800" fill="#C8FF00" text-anchor="middle">1. ЗАЯВКА</text>
+        <text x="70" y="98" fill="#F5F5F5" text-anchor="middle">15-мин звонок</text>
+        <text x="70" y="112" fill="#F5F5F5" text-anchor="middle">с менеджером</text>
+
+        <rect x="135" y="60" width="110" height="60" rx="4" fill="#141414" stroke="#C8FF00"/>
+        <text x="190" y="80" font-weight="800" fill="#C8FF00" text-anchor="middle">2. БРИФ</text>
+        <text x="190" y="98" fill="#F5F5F5" text-anchor="middle">Заполняет в кабинете:</text>
+        <text x="190" y="112" fill="#F5F5F5" text-anchor="middle">продукт, цели, бюджет</text>
+
+        <rect x="255" y="60" width="110" height="60" rx="4" fill="#141414" stroke="#C8FF00"/>
+        <text x="310" y="80" font-weight="800" fill="#C8FF00" text-anchor="middle">3. ПОДБОРКА</text>
+        <text x="310" y="98" fill="#F5F5F5" text-anchor="middle">Получает 5-10</text>
+        <text x="310" y="112" fill="#F5F5F5" text-anchor="middle">блогеров с метриками</text>
+
+        <rect x="375" y="60" width="110" height="60" rx="4" fill="#141414" stroke="#C8FF00"/>
+        <text x="430" y="80" font-weight="800" fill="#C8FF00" text-anchor="middle">4. СОГЛАСОВАНИЕ</text>
+        <text x="430" y="98" fill="#F5F5F5" text-anchor="middle">Выбирает 3-5,</text>
+        <text x="430" y="112" fill="#F5F5F5" text-anchor="middle">утверждает ТЗ</text>
+
+        <rect x="495" y="60" width="80" height="60" rx="4" fill="#141414" stroke="#C8FF00"/>
+        <text x="535" y="80" font-weight="800" fill="#C8FF00" text-anchor="middle">5. ОПЛАТА</text>
+        <text x="535" y="98" fill="#F5F5F5" text-anchor="middle">50%</text>
+        <text x="535" y="112" fill="#F5F5F5" text-anchor="middle">предоплата</text>
+
+        <rect x="15" y="155" width="110" height="60" rx="4" fill="#141414" stroke="#FBBF24"/>
+        <text x="70" y="175" font-weight="800" fill="#FBBF24" text-anchor="middle">6. ПРОДАКШН</text>
+        <text x="70" y="193" fill="#F5F5F5" text-anchor="middle">Блогер снимает,</text>
+        <text x="70" y="207" fill="#F5F5F5" text-anchor="middle">бренд видит превью</text>
+
+        <rect x="135" y="155" width="110" height="60" rx="4" fill="#141414" stroke="#FBBF24"/>
+        <text x="190" y="175" font-weight="800" fill="#FBBF24" text-anchor="middle">7. ПУБЛИКАЦИЯ</text>
+        <text x="190" y="193" fill="#F5F5F5" text-anchor="middle">Видео выходит</text>
+        <text x="190" y="207" fill="#F5F5F5" text-anchor="middle">с трекинг-ссылкой</text>
+
+        <rect x="255" y="155" width="110" height="60" rx="4" fill="#141414" stroke="#FBBF24"/>
+        <text x="310" y="175" font-weight="800" fill="#FBBF24" text-anchor="middle">8. РЕЗУЛЬТАТ</text>
+        <text x="310" y="193" fill="#F5F5F5" text-anchor="middle">Видит продажи</text>
+        <text x="310" y="207" fill="#F5F5F5" text-anchor="middle">в кабинете онлайн</text>
+
+        <rect x="375" y="155" width="110" height="60" rx="4" fill="#141414" stroke="#FBBF24"/>
+        <text x="430" y="175" font-weight="800" fill="#FBBF24" text-anchor="middle">9. ОТЧЁТ</text>
+        <text x="430" y="193" fill="#F5F5F5" text-anchor="middle">Через 30 дней:</text>
+        <text x="430" y="207" fill="#F5F5F5" text-anchor="middle">итоговая отдача</text>
+
+        <rect x="495" y="155" width="80" height="60" rx="4" fill="#141414" stroke="#4ADE80"/>
+        <text x="535" y="175" font-weight="800" fill="#4ADE80" text-anchor="middle">10. ПОВТОР</text>
+        <text x="535" y="193" fill="#F5F5F5" text-anchor="middle">Кнопка</text>
+        <text x="535" y="207" fill="#F5F5F5" text-anchor="middle">«ещё раз»</text>
+      </g>
+    </svg></div>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-09.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="9">
+      <div class="page-num">10 / 16</div>
+      
+        <div class="slide-content">
+          <div class="label">Кто рядом и куда уходят деньги</div>
+          <h2>Конкуренты</h2>
+          <div class="svg-frame"><svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <text x="300" y="25" font-family="Inter" font-size="13" font-weight="800" fill="#F5F5F5" text-anchor="middle">Кто продаёт через блогеров и куда уходят деньги</text>
+      <g font-family="Inter" font-size="11">
+        <rect x="20" y="60" width="270" height="40" rx="4" fill="#141414" stroke="#F87171"/>
+        <text x="35" y="78" font-weight="700" fill="#F87171">WB Wibes / Ozon в VK / Яндекс Ритм</text>
+        <text x="35" y="92" fill="#B0B0B0">→ продажа уходит в маркетплейс</text>
+
+        <rect x="20" y="115" width="270" height="40" rx="4" fill="#141414" stroke="#F87171"/>
+        <text x="35" y="133" font-weight="700" fill="#F87171">TikTok Shop (как бенчмарк, в РФ нет)</text>
+        <text x="35" y="147" fill="#B0B0B0">→ продажа уходит в TikTok</text>
+
+        <rect x="20" y="170" width="270" height="40" rx="4" fill="#141414" stroke="#FBBF24"/>
+        <text x="35" y="188" font-weight="700" fill="#FBBF24">Getblogger / Epicstars</text>
+        <text x="35" y="202" fill="#B0B0B0">→ агентский сервис, без замера продаж</text>
+
+        <rect x="310" y="60" width="270" height="150" rx="4" fill="#1A2810" stroke="#C8FF00" stroke-width="2"/>
+        <text x="445" y="85" font-weight="800" fill="#C8FF00" text-anchor="middle" font-size="13">МЫ</text>
+        <text x="325" y="110" fill="#F5F5F5">Длинные обзоры на RuTube</text>
+        <text x="325" y="128" fill="#F5F5F5">→ продажа уходит на сайт бренда</text>
+        <text x="325" y="146" fill="#F5F5F5">Бренд сохраняет всю маржу</text>
+        <text x="325" y="164" fill="#F5F5F5">Бренд видит ROI в реальном времени</text>
+        <text x="325" y="184" font-weight="800" fill="#C8FF00">↑ незанятая ниша</text>
+        <text x="325" y="200" fill="#B0B0B0" font-size="10">никто не делает на пересечении</text>
+      </g>
+    </svg></div>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-10.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="10">
+      <div class="page-num">11 / 16</div>
+      
+        <div class="slide-content">
+          <div class="label">Девять рабочих блоков</div>
+          <h2>Из чего состоит платформа</h2>
+          <div class="svg-frame"><svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <text x="300" y="22" font-family="Inter" font-size="13" font-weight="800" fill="#F5F5F5" text-anchor="middle">Из чего состоит платформа</text>
+      <g font-family="Inter">
+        <rect x="20" y="50" width="180" height="65" rx="4" fill="#141414" stroke="#C8FF00"/>
+        <text x="30" y="70" font-size="11" font-weight="800" fill="#C8FF00">Кабинет бренда</text>
+        <text x="30" y="88" font-size="10" fill="#B0B0B0">Бриф, подбор блогеров,</text>
+        <text x="30" y="103" font-size="10" fill="#B0B0B0">отчёт по продажам онлайн</text>
+
+        <rect x="210" y="50" width="180" height="65" rx="4" fill="#141414" stroke="#C8FF00"/>
+        <text x="220" y="70" font-size="11" font-weight="800" fill="#C8FF00">Парсер RuTube</text>
+        <text x="220" y="88" font-size="10" fill="#B0B0B0">Сбор открытых метрик</text>
+        <text x="220" y="103" font-size="10" fill="#B0B0B0">500 каналов в сутки</text>
+
+        <rect x="400" y="50" width="180" height="65" rx="4" fill="#141414" stroke="#C8FF00"/>
+        <text x="410" y="70" font-size="11" font-weight="800" fill="#C8FF00">Каталог блогеров</text>
+        <text x="410" y="88" font-size="10" fill="#B0B0B0">База с рейтингом, тарифами,</text>
+        <text x="410" y="103" font-size="10" fill="#B0B0B0">историей кампаний</text>
+
+        <rect x="20" y="125" width="180" height="65" rx="4" fill="#141414" stroke="#00D9FF"/>
+        <text x="30" y="145" font-size="11" font-weight="800" fill="#00D9FF">Трекинг продаж</text>
+        <text x="30" y="163" font-size="10" fill="#B0B0B0">Метки в ссылках +</text>
+        <text x="30" y="178" font-size="10" fill="#B0B0B0">промокоды на каждого блогера</text>
+
+        <rect x="210" y="125" width="180" height="65" rx="4" fill="#141414" stroke="#00D9FF"/>
+        <text x="220" y="145" font-size="11" font-weight="800" fill="#00D9FF">Связь с сайтом бренда</text>
+        <text x="220" y="163" font-size="10" fill="#B0B0B0">Подключение к Bitrix,</text>
+        <text x="220" y="178" font-size="10" fill="#B0B0B0">InSales, Tilda Magazin</text>
+
+        <rect x="400" y="125" width="180" height="65" rx="4" fill="#141414" stroke="#00D9FF"/>
+        <text x="410" y="145" font-size="11" font-weight="800" fill="#00D9FF">Документы и оплаты</text>
+        <text x="410" y="163" font-size="10" fill="#B0B0B0">Контур.Диадок + Тинькофф</text>
+        <text x="410" y="178" font-size="10" fill="#B0B0B0">Самозанятые (выплаты за 15 мин)</text>
+
+        <rect x="20" y="200" width="180" height="65" rx="4" fill="#141414" stroke="#FBBF24"/>
+        <text x="30" y="220" font-size="11" font-weight="800" fill="#FBBF24">Рабочий процесс</text>
+        <text x="30" y="238" font-size="10" fill="#B0B0B0">Превью контента,</text>
+        <text x="30" y="253" font-size="10" fill="#B0B0B0">модерация, утверждение</text>
+
+        <rect x="210" y="200" width="180" height="65" rx="4" fill="#141414" stroke="#FBBF24"/>
+        <text x="220" y="220" font-size="11" font-weight="800" fill="#FBBF24">Лендинги входа</text>
+        <text x="220" y="238" font-size="10" fill="#B0B0B0">Две страницы: для брендов</text>
+        <text x="220" y="253" font-size="10" fill="#B0B0B0">и для блогеров (Tilda Pro)</text>
+
+        <rect x="400" y="200" width="180" height="65" rx="4" fill="#141414" stroke="#FBBF24"/>
+        <text x="410" y="220" font-size="11" font-weight="800" fill="#FBBF24">Outbound-стек</text>
+        <text x="410" y="238" font-size="10" fill="#B0B0B0">amoCRM + рассылки SendPulse +</text>
+        <text x="410" y="253" font-size="10" fill="#B0B0B0">телефония Sipuni</text>
+      </g>
+    </svg></div>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-11.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="11">
+      <div class="page-num">12 / 16</div>
+      
+        <div class="slide-content">
+          <div class="label">Распределение ролей</div>
+          <h2>Кто что делает</h2>
+          <div class="svg-frame"><svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <text x="300" y="22" font-family="Inter" font-size="13" font-weight="800" fill="#F5F5F5" text-anchor="middle">Кто что делает в проекте</text>
+      <g font-family="Inter" font-size="10">
+        <rect x="20" y="45" width="180" height="220" rx="6" fill="#141414" stroke="#C8FF00"/>
+        <text x="110" y="68" font-weight="800" font-size="12" fill="#C8FF00" text-anchor="middle">МЫ (платформа)</text>
+        <text x="30" y="92" fill="#F5F5F5">→ Outbound к брендам</text>
+        <text x="30" y="110" fill="#F5F5F5">→ Подбор блогеров под бриф</text>
+        <text x="30" y="128" fill="#F5F5F5">→ Договоры и оплаты</text>
+        <text x="30" y="146" fill="#F5F5F5">→ Продакшн интеграций</text>
+        <text x="30" y="164" fill="#F5F5F5">→ Замер продаж и отчёты</text>
+        <text x="30" y="182" fill="#F5F5F5">→ Все споры и коммуникация</text>
+        <text x="30" y="200" fill="#F5F5F5">→ Технологии платформы</text>
+        <text x="30" y="218" fill="#F5F5F5">→ Упаковка продукта</text>
+        <text x="30" y="236" fill="#F5F5F5">→ Пресейл и B2B-маркетинг</text>
+        <text x="30" y="254" fill="#F5F5F5">→ Поиск партнёров</text>
+
+        <rect x="210" y="45" width="180" height="220" rx="6" fill="#141414" stroke="#00D9FF"/>
+        <text x="300" y="68" font-weight="800" font-size="12" fill="#00D9FF" text-anchor="middle">RUTUBE / ГПМХ</text>
+        <text x="220" y="92" fill="#F5F5F5">→ Доступ к блогерам</text>
+        <text x="220" y="105" fill="#B0B0B0" font-size="9">по контрактам холдинга</text>
+        <text x="220" y="125" fill="#F5F5F5">→ Партнёрский API</text>
+        <text x="220" y="138" fill="#B0B0B0" font-size="9">для виджетов на видео (этап 2)</text>
+        <text x="220" y="158" fill="#F5F5F5">→ Промо-поддержка</text>
+        <text x="220" y="171" fill="#B0B0B0" font-size="9">PR пилотного проекта</text>
+        <text x="220" y="191" fill="#F5F5F5">→ Рекомендации</text>
+        <text x="220" y="204" fill="#B0B0B0" font-size="9">блогерам присоединиться</text>
+        <text x="220" y="224" fill="#F5F5F5">→ Получает % с оборота</text>
+        <text x="220" y="237" fill="#B0B0B0" font-size="9">через долю в платформе</text>
+
+        <rect x="400" y="45" width="180" height="220" rx="6" fill="#141414" stroke="#FBBF24"/>
+        <text x="490" y="68" font-weight="800" font-size="12" fill="#FBBF24" text-anchor="middle">БРЕНДЫ И БЛОГЕРЫ</text>
+        <text x="410" y="92" fill="#F5F5F5">Бренд:</text>
+        <text x="410" y="110" fill="#B0B0B0">→ Заполняет бриф</text>
+        <text x="410" y="125" fill="#B0B0B0">→ Платит за результат</text>
+        <text x="410" y="140" fill="#B0B0B0">→ Утверждает контент</text>
+        <text x="410" y="160" fill="#F5F5F5">Блогер:</text>
+        <text x="410" y="178" fill="#B0B0B0">→ Регистрируется</text>
+        <text x="410" y="193" fill="#B0B0B0">→ Производит контент</text>
+        <text x="410" y="208" fill="#B0B0B0">→ Получает выплату</text>
+        <text x="410" y="223" fill="#B0B0B0">за 15 минут</text>
+        <text x="410" y="247" fill="#FBBF24" font-weight="700">Никогда не общаются</text>
+        <text x="410" y="259" fill="#FBBF24" font-weight="700">напрямую — только через нас</text>
+      </g>
+    </svg></div>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-12.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="12">
+      <div class="page-num">13 / 16</div>
+      
+        <div class="slide-content">
+          <div class="label">Три года, три горизонта</div>
+          <h2>Дорожная карта</h2>
+          <div class="svg-frame"><svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <text x="300" y="22" font-family="Inter" font-size="13" font-weight="800" fill="#F5F5F5" text-anchor="middle">Дорожная карта</text>
+      <g font-family="Inter">
+        <line x1="50" y1="160" x2="550" y2="160" stroke="#2A2A2A" stroke-width="2"/>
+
+        <circle cx="100" cy="160" r="10" fill="#C8FF00"/>
+        <text x="100" y="195" font-size="11" font-weight="800" fill="#C8FF00" text-anchor="middle">Год 1</text>
+        <text x="100" y="50" font-size="11" font-weight="700" fill="#F5F5F5" text-anchor="middle">Пилот + MVP</text>
+        <text x="100" y="68" font-size="9" fill="#B0B0B0" text-anchor="middle">мес 1-4: эксперимент</text>
+        <text x="100" y="82" font-size="9" fill="#B0B0B0" text-anchor="middle">мес 5-8: разработка</text>
+        <text x="100" y="96" font-size="9" fill="#B0B0B0" text-anchor="middle">мес 9-14: окупаемость</text>
+
+        <text x="100" y="220" font-size="9" fill="#FBBF24" text-anchor="middle">Старт: спецпроекты</text>
+        <text x="100" y="232" font-size="9" fill="#FBBF24" text-anchor="middle">10 интеграций × 4 мес</text>
+        <text x="100" y="244" font-size="9" fill="#B0B0B0" text-anchor="middle">2,5 млн ₽</text>
+
+        <circle cx="300" cy="160" r="10" fill="#00D9FF"/>
+        <text x="300" y="195" font-size="11" font-weight="800" fill="#00D9FF" text-anchor="middle">Год 2</text>
+        <text x="300" y="50" font-size="11" font-weight="700" fill="#F5F5F5" text-anchor="middle">Масштаб</text>
+        <text x="300" y="68" font-size="9" fill="#B0B0B0" text-anchor="middle">120 интеграций/мес</text>
+        <text x="300" y="82" font-size="9" fill="#B0B0B0" text-anchor="middle">35 брендов</text>
+        <text x="300" y="96" font-size="9" fill="#B0B0B0" text-anchor="middle">15 тыс. блогеров</text>
+
+        <text x="300" y="220" font-size="9" fill="#FBBF24" text-anchor="middle">Запуск виджета</text>
+        <text x="300" y="232" font-size="9" fill="#FBBF24" text-anchor="middle">на старых видео</text>
+        <text x="300" y="244" font-size="9" fill="#B0B0B0" text-anchor="middle">+5,8 млн ₽</text>
+
+        <circle cx="500" cy="160" r="12" fill="#FBBF24"/>
+        <text x="500" y="195" font-size="11" font-weight="800" fill="#FBBF24" text-anchor="middle">Год 3</text>
+        <text x="500" y="50" font-size="11" font-weight="700" fill="#F5F5F5" text-anchor="middle">Экосистема</text>
+        <text x="500" y="68" font-size="9" fill="#B0B0B0" text-anchor="middle">350 интеграций/мес</text>
+        <text x="500" y="82" font-size="9" fill="#B0B0B0" text-anchor="middle">100 брендов</text>
+        <text x="500" y="96" font-size="9" fill="#B0B0B0" text-anchor="middle">50 тыс. блогеров</text>
+
+        <text x="500" y="220" font-size="9" fill="#FBBF24" text-anchor="middle">Live-шоппинг,</text>
+        <text x="500" y="232" font-size="9" fill="#FBBF24" text-anchor="middle">мобильное приложение</text>
+        <text x="500" y="244" font-size="9" fill="#B0B0B0" text-anchor="middle">+15,5 млн ₽</text>
+      </g>
+    </svg></div>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-13.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="13">
+      <div class="page-num">14 / 16</div>
+      
+        <div class="slide-content">
+          <div class="label">И зачем это ГПМХ</div>
+          <h2>Метрики через 3 года</h2>
+          <div class="svg-frame"><svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <text x="300" y="22" font-family="Inter" font-size="13" font-weight="800" fill="#F5F5F5" text-anchor="middle">К чему приходим за 3 года и зачем это ГПМХ</text>
+      <g font-family="Inter">
+        <rect x="20" y="50" width="180" height="80" rx="4" fill="#141414" stroke="#C8FF00"/>
+        <text x="110" y="72" font-size="11" font-weight="800" fill="#C8FF00" text-anchor="middle">ОБЪЁМ СДЕЛОК</text>
+        <text x="110" y="100" font-size="20" font-weight="900" fill="#F5F5F5" text-anchor="middle">~30 млрд ₽</text>
+        <text x="110" y="120" font-size="10" fill="#B0B0B0" text-anchor="middle">оборот через платформу/год</text>
+
+        <rect x="210" y="50" width="180" height="80" rx="4" fill="#141414" stroke="#C8FF00"/>
+        <text x="300" y="72" font-size="11" font-weight="800" fill="#C8FF00" text-anchor="middle">ВЫРУЧКА</text>
+        <text x="300" y="100" font-size="20" font-weight="900" fill="#F5F5F5" text-anchor="middle">~6 млн ₽/мес</text>
+        <text x="300" y="120" font-size="10" fill="#B0B0B0" text-anchor="middle">наша комиссия 20%</text>
+
+        <rect x="400" y="50" width="180" height="80" rx="4" fill="#141414" stroke="#C8FF00"/>
+        <text x="490" y="72" font-size="11" font-weight="800" fill="#C8FF00" text-anchor="middle">ПРИБЫЛЬ</text>
+        <text x="490" y="100" font-size="20" font-weight="900" fill="#F5F5F5" text-anchor="middle">~3,5 млн ₽/мес</text>
+        <text x="490" y="120" font-size="10" fill="#B0B0B0" text-anchor="middle">за вычетом расходов</text>
+
+        <rect x="20" y="155" width="560" height="100" rx="6" fill="#141414" stroke="#FBBF24"/>
+        <text x="35" y="180" font-size="11" font-weight="800" fill="#FBBF24">Зачем это ГПМХ:</text>
+        <text x="35" y="200" font-size="11" fill="#F5F5F5">→ Растёт средний доход блогеров RuTube — они меньше уходят на YouTube/VK</text>
+        <text x="35" y="220" font-size="11" fill="#F5F5F5">→ Появляется новый формат рекламы: длинные обзоры с продажами на сайт бренда</text>
+        <text x="35" y="240" font-size="11" fill="#F5F5F5">→ Опережаем WB/Ozon с их короткими роликами в нише, где они не работают</text>
+      </g>
+    </svg></div>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-14.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="14">
+      <div class="page-num">15 / 16</div>
+      
+        <div class="slide-content">
+          <div class="label">По годам</div>
+          <h2>Бюджет</h2>
+          <div class="svg-frame"><svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <text x="300" y="22" font-family="Inter" font-size="13" font-weight="800" fill="#F5F5F5" text-anchor="middle">Бюджет по этапам</text>
+      <g font-family="Inter">
+        <rect x="40" y="55" width="160" height="200" rx="6" fill="#141414" stroke="#C8FF00"/>
+        <text x="120" y="80" font-size="11" font-weight="800" fill="#C8FF00" text-anchor="middle">ГОД 1</text>
+        <text x="120" y="115" font-size="22" font-weight="900" fill="#C8FF00" text-anchor="middle">11,2 млн ₽</text>
+        <text x="120" y="135" font-size="10" fill="#B0B0B0" text-anchor="middle">из них:</text>
+        <text x="120" y="155" font-size="11" fill="#F5F5F5" text-anchor="middle">2,5 — пилот</text>
+        <text x="120" y="172" font-size="11" fill="#F5F5F5" text-anchor="middle">3 — разработка</text>
+        <text x="120" y="189" font-size="11" fill="#F5F5F5" text-anchor="middle">5,7 — операции</text>
+        <text x="120" y="220" font-size="10" fill="#FBBF24" text-anchor="middle">окупаемость</text>
+        <text x="120" y="234" font-size="10" fill="#FBBF24" text-anchor="middle">в конце года</text>
+
+        <rect x="220" y="55" width="160" height="200" rx="6" fill="#141414" stroke="#00D9FF"/>
+        <text x="300" y="80" font-size="11" font-weight="800" fill="#00D9FF" text-anchor="middle">ГОД 2</text>
+        <text x="300" y="115" font-size="22" font-weight="900" fill="#00D9FF" text-anchor="middle">5,8 млн ₽</text>
+        <text x="300" y="135" font-size="10" fill="#B0B0B0" text-anchor="middle">из них:</text>
+        <text x="300" y="155" font-size="11" fill="#F5F5F5" text-anchor="middle">1,5 — виджет</text>
+        <text x="300" y="172" font-size="11" fill="#F5F5F5" text-anchor="middle">1 — авто-подбор</text>
+        <text x="300" y="189" font-size="11" fill="#F5F5F5" text-anchor="middle">3,3 — мобильное</text>
+        <text x="300" y="220" font-size="10" fill="#FBBF24" text-anchor="middle">прибыль ~24 млн ₽</text>
+        <text x="300" y="234" font-size="10" fill="#FBBF24" text-anchor="middle">накоплено к концу</text>
+
+        <rect x="400" y="55" width="160" height="200" rx="6" fill="#141414" stroke="#FBBF24"/>
+        <text x="480" y="80" font-size="11" font-weight="800" fill="#FBBF24" text-anchor="middle">ГОД 3</text>
+        <text x="480" y="115" font-size="22" font-weight="900" fill="#FBBF24" text-anchor="middle">15,5 млн ₽</text>
+        <text x="480" y="135" font-size="10" fill="#B0B0B0" text-anchor="middle">из них:</text>
+        <text x="480" y="155" font-size="11" fill="#F5F5F5" text-anchor="middle">3 — live-шоппинг</text>
+        <text x="480" y="172" font-size="11" fill="#F5F5F5" text-anchor="middle">2 — топ-блогеры</text>
+        <text x="480" y="189" font-size="11" fill="#F5F5F5" text-anchor="middle">10,5 — экспансия</text>
+        <text x="480" y="220" font-size="10" fill="#FBBF24" text-anchor="middle">прибыль ~38 млн ₽</text>
+        <text x="480" y="234" font-size="10" fill="#FBBF24" text-anchor="middle">накоплено к концу</text>
+      </g>
+    </svg></div>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-15.mp3"></audio>
+    </section>
+
+    <section class="slide" data-idx="15">
+      <div class="page-num">16 / 16</div>
+      
+        <div class="slide-content">
+          <div class="label">Три пункта</div>
+          <h2>Что нужно решить сейчас</h2>
+          <div class="svg-frame"><svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+      <text x="300" y="25" font-family="Inter" font-size="13" font-weight="800" fill="#F5F5F5" text-anchor="middle">Что нужно решить сейчас</text>
+      <g font-family="Inter">
+        <rect x="40" y="60" width="160" height="180" rx="6" fill="#141414" stroke="#C8FF00"/>
+        <text x="120" y="85" font-size="11" font-weight="800" fill="#C8FF00" text-anchor="middle">БЮДЖЕТ ПИЛОТА</text>
+        <text x="120" y="125" font-size="22" font-weight="900" fill="#F5F5F5" text-anchor="middle">2,5 млн ₽</text>
+        <text x="120" y="150" font-size="10" fill="#B0B0B0" text-anchor="middle">от ГПМХ или инвестора</text>
+        <text x="120" y="180" font-size="11" fill="#F5F5F5" text-anchor="middle">4 месяца</text>
+        <text x="120" y="200" font-size="10" fill="#B0B0B0" text-anchor="middle">10 интеграций</text>
+
+        <rect x="220" y="60" width="160" height="180" rx="6" fill="#141414" stroke="#00D9FF"/>
+        <text x="300" y="85" font-size="11" font-weight="800" fill="#00D9FF" text-anchor="middle">КОМАНДА</text>
+        <text x="300" y="115" font-size="13" font-weight="800" fill="#F5F5F5" text-anchor="middle">Наша</text>
+        <text x="300" y="140" font-size="10" fill="#B0B0B0" text-anchor="middle">Вся реализация</text>
+        <text x="300" y="155" font-size="10" fill="#B0B0B0" text-anchor="middle">через нашу команду</text>
+        <text x="300" y="180" font-size="11" fill="#F5F5F5" text-anchor="middle">Расходы и закупки</text>
+        <text x="300" y="195" font-size="11" fill="#F5F5F5" text-anchor="middle">проходят через нас</text>
+
+        <rect x="400" y="60" width="160" height="180" rx="6" fill="#141414" stroke="#FBBF24"/>
+        <text x="480" y="85" font-size="11" font-weight="800" fill="#FBBF24" text-anchor="middle">ОТ ГПМХ</text>
+        <text x="480" y="120" font-size="11" fill="#F5F5F5" text-anchor="middle">Доступ к</text>
+        <text x="480" y="135" font-size="11" fill="#F5F5F5" text-anchor="middle">контрактным блогерам</text>
+        <text x="480" y="160" font-size="11" fill="#F5F5F5" text-anchor="middle">Промо-поддержка</text>
+        <text x="480" y="175" font-size="11" fill="#F5F5F5" text-anchor="middle">пилотного проекта</text>
+        <text x="480" y="200" font-size="11" fill="#F5F5F5" text-anchor="middle">Контакты в RuTube</text>
+        <text x="480" y="215" font-size="11" fill="#F5F5F5" text-anchor="middle">для виджет-API позже</text>
+      </g>
+    </svg></div>
+        </div>
+      <audio class="audio" preload="auto" src="audio/slide-16.mp3"></audio>
+    </section></div>
+  <div class="controls">
+    <button class="btn" id="prevBtn">← Назад</button>
+    <button class="btn primary" id="playBtn">❚❚ Пауза</button>
+    <button class="btn" id="nextBtn">Дальше →</button>
+    <span class="counter" id="counter">01 / 16</span>
+  </div>
+</div>
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let idx = 0, isPlaying = true;
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+  const overlay = document.getElementById('overlay');
+  const startBtn = document.getElementById('startBtn');
+  const playBtn = document.getElementById('playBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  function show(i){
+    if(i<0||i>=total)return;
+    const prev=slides[idx],cur=slides[i];
+    if(prev){const a=prev.querySelector('.audio');if(a){a.pause();a.currentTime=0;}prev.classList.remove('active');}
+    idx=i;cur.classList.add('active');
+    const a=cur.querySelector('.audio');
+    if(a){a.onended=()=>{if(isPlaying&&idx<total-1)show(idx+1);};if(isPlaying)a.play().catch(()=>{});}
+    progress.style.width=((idx+1)/total*100)+'%';
+    counter.textContent=String(idx+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
+    prevBtn.disabled=idx===0;nextBtn.disabled=idx===total-1;
+    playBtn.textContent=isPlaying?'❚❚ Пауза':'▶ Играть';
+  }
+  function togglePlay(){isPlaying=!isPlaying;const a=slides[idx].querySelector('.audio');if(a){if(isPlaying)a.play().catch(()=>{});else a.pause();}playBtn.textContent=isPlaying?'❚❚ Пауза':'▶ Играть';}
+  startBtn.onclick=()=>{overlay.classList.add('hidden');show(0);};
+  prevBtn.onclick=()=>show(idx-1);nextBtn.onclick=()=>show(idx+1);playBtn.onclick=togglePlay;
+  document.onkeydown=(e)=>{if(overlay.classList.contains('hidden')){if(e.key==='ArrowRight')show(idx+1);if(e.key==='ArrowLeft')show(idx-1);if(e.key===' '){e.preventDefault();togglePlay();}}else if(e.key==='Enter'||e.key===' ')startBtn.click();};
+})();
+</script>
+</body>
+</html>
